@@ -1,10 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const parser = require('body-parser');
+const config = require('./config/config');
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/galias', { useMongoClient: true });
+mongoose.connect(config.mongo.url, { useMongoClient: true });
 
 require('./config/passport/passport');
 
