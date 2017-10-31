@@ -19,7 +19,7 @@ exports.listLast = async (req, res) => {
 
         res.send(info);
     } catch (err) {
-        res.send(err);
+        res.status(400).send(err);
     }
 };
 
@@ -27,8 +27,8 @@ exports.insert = async (req, res) => {
     try {
         const newInfo = await new Info(req.body).save();
 
-        res.send(newInfo);
+        res.status(201).send(newInfo);
     } catch (err) {
-        res.send(err);
+        res.status(400).send(err);
     }
 };
