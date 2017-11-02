@@ -5,7 +5,7 @@ exports.list = async (req, res) => {
     const hasta = new Date(req.query.hasta);
 
     try {
-        const info = await Info.find({ fecha: { $gte: desde, $lte: hasta } });
+        const info = await Info.find({ fecha: { $gte: desde.toDateString(), $lte: hasta.toDateString() } });
 
         res.send(info);
     } catch (err) {
