@@ -38,6 +38,16 @@ const InfoSchema = new Schema({
     }
 });
 
+InfoSchema.virtual('%vencidoDebito').get(function () {
+    return (this.debito.vencido / this.debito.total) * 100;
+});
+
+InfoSchema.virtual('%vencidoCredito').get(function () {
+    return (this.credito.vencido / this.credito.total) * 100;
+});
+
+InfoSchema.set('toJSON', { virtuals: true });
+
 const Info = mongoose.model('info', InfoSchema, 'infos');
 
 module.exports = Info;
