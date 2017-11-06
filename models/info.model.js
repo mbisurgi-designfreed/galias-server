@@ -10,6 +10,10 @@ const DeudaSchema = new Schema({
     vencido: {
         type: Number,
         required: true
+    },
+    nc: {
+        type: Number,
+        default: 0
     }
 });
 
@@ -39,7 +43,10 @@ const InfoSchema = new Schema({
 });
 
 InfoSchema.virtual('%vencidoDebito').get(function () {
-    return (this.debito.vencido / this.debito.total) * 100;
+    const total = this.debito.total - this.debito.nc;
+    const vencido = this.debito.vencido - this.debito.nc;
+
+    return (vencido / total) * 100;
 });
 
 InfoSchema.virtual('%vencidoCredito').get(function () {
