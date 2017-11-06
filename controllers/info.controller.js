@@ -1,11 +1,12 @@
+const moment = require('moment');
 const Info = require('../models/info.model');
 
 exports.list = async (req, res) => {
-    const desde = new Date(req.query.desde);
-    const hasta = new Date(req.query.hasta);
+    const desde = moment(new Date(req.query.desde)).subtract(3, 'hours');
+    const hasta = moment(new Date(req.query.hasta)).subtract(3, 'hours');
 
     try {
-        const info = await Info.find({ fecha: { $gte: desde.toDateString(), $lte: hasta.toDateString() } });
+        const info = await Info.find({ fecha: { $gte: desde, $lte: hasta } });
 
         res.send(info);
     } catch (err) {
