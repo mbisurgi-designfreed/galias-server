@@ -6,7 +6,7 @@ exports.list = async (req, res) => {
     const hasta = moment(new Date(req.query.hasta)).subtract(3, 'hours');
 
     try {
-        const info = await Info.find({ fecha: { $gte: desde, $lte: hasta } });
+        const info = await Info.find({ fecha: { $gte: desde, $lte: hasta } }).sort({ fecha: -1 });
 
         res.send(info);
     } catch (err) {
