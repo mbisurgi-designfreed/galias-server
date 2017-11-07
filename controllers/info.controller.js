@@ -10,7 +10,7 @@ exports.list = async (req, res) => {
 
         res.send(info);
     } catch (err) {
-        res.send(err);
+        res.status(400).send(err);
     }
 };
 
