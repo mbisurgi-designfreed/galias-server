@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const parser = require('body-parser');
+const http = require('http');
+const socket = require('socket.io');
 const cors = require('cors');
 const config = require('./config/config');
 
@@ -8,17 +10,23 @@ const app = express();
 
 mongoose.connect(config.mongo.url, { useMongoClient: true });
 
-
 require('./config/passport/passport');
 
 app.use(cors());
 app.use(parser.json());
 app.use(parser.urlencoded({ extended: false }));
 
+const server = http.createServer(app);
+const io = socket(server);
+
+io.on('connection', (socket) => {
+    console.log('Client connected with id: ', socket.client.id);
+});
+
 require('./routes/auth.route')(app);
-require('./routes/info.route')(app);
+require('./routes/info.route')(app, io);
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server started, listening on port ${PORT}`);
 });

@@ -1,9 +1,10 @@
 const passport = require('passport');
-const InfoController = require('../controllers/info.controller');
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
-module.exports = (app) => {
+module.exports = (app, io) => {
+    const InfoController = require('../controllers/info.controller')(io);
+
     app.get('/api/info/fecha', jwtAuth, InfoController.list);
 
     app.get('/api/info/last', jwtAuth, InfoController.listLast);

@@ -22,6 +22,7 @@
     "mongoose": "^4.12.4",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.1",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "socket.io": "^1.7.2"
   }
 }
