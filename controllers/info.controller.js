@@ -39,7 +39,7 @@ module.exports = (io) => {
 
             const messages = await Promise.all(recipients.map(async (number) => {
                 await client.api.messages.create({
-                    body: `Info diaria del ${newInfo.fecha} cargada`,
+                    body: `Info diaria del ${newInfo.fecha} cargada. https://galias-app.herokuapp.com/`,
                     from: '+13025250397',
                     to: number
                 });
