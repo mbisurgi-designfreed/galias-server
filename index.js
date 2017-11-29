@@ -24,7 +24,10 @@ io.on('connection', (socket) => {
 });
 
 require('./routes/auth.route')(app);
+require('./routes/cliente.route')(app);
+require('./routes/articulo.route')(app);
 require('./routes/info.route')(app, io);
+require('./routes/pedido.route')(app, io);
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
