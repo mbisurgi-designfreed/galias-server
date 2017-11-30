@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ArticuloSchema = new Schema({
+    codigo: {
+        type: String,
+        required: true
+    },
     descripcion: {
         type: String,
         required: true
