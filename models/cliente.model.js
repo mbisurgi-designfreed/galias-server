@@ -52,6 +52,10 @@ const ClienteSchema = new Schema({
     },
     sucursales: {
         type: [DireccionSchema]
+    },
+    sincronizado: {
+        type: Boolean,
+        default: false
     }
 });
 

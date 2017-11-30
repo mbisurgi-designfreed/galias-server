@@ -10,6 +10,10 @@ const ArticuloSchema = new Schema({
     descripcion: {
         type: String,
         required: true
+    },
+    sincronizado: {
+        type: Boolean,
+        default: false
     }
 });
 
