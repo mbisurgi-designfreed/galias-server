@@ -64,7 +64,6 @@ const PersonaInteres = new Schema({
 const ClienteSchema = new Schema({
     codigo: {
         type: Number,
-        required: true,
         unique: true
     },
     razonSocial: {
@@ -115,10 +114,15 @@ const ClienteSchema = new Schema({
     }
 });
 
-ClienteSchema.pre('save', function (next) {
+ClienteSchema.pre('save', async function (next) {
+    const model = mongoose.model('cliente');
     const cliente = this;
 
-    
+    let codigo = await model.findOne().sort({ codigo: -1 }).limit(1);
+
+    this.codigo = codigo === null ? codigo = 100001 : codigo++;
+
+    next();
 });
 
 const Cliente = mongoose.model('cliente', ClienteSchema, 'clientes');
