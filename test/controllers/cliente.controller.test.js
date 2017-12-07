@@ -40,4 +40,45 @@ describe('Clientes', () => {
                 });
         });
     });
+
+    describe('/POST cliente', () => {
+        beforeEach((done) => {
+            new Cliente({
+                razonSocial: 'Maximiliano Bisurgi',
+                direccion: {
+                    calle: 'Independencia',
+                    altura: '185',
+                    localidad: 'Monte Grande',
+                    codigoPostal: '1842'
+                },
+                diaVisita: 'lunes',
+                diaEntrega: 'miercoles'
+            }).save((err, cliente) => {
+                console.log(cliente);
+                done();
+            });
+        });
+
+        it('it should generate a new codigo + 1', (done) => {
+            new Cliente({
+                razonSocial: 'Claudio Bisurgi',
+                direccion: {
+                    calle: 'Ruta 52',
+                    altura: 'km 3,5',
+                    localidad: 'Canning',
+                    codigoPostal: '1804'
+                },
+                diaVisita: 'lunes',
+                diaEntrega: 'miercoles'
+            }).save((err, cliente) => {
+                chai.request(server)
+                .get(`/api/cliente/${cliente.id}`)
+                .send(cliente)
+                .end((err, res) => {
+                    res.body.should.have.property('codigo').eql(100002);
+                    done();
+                });
+            });
+        });
+    });
 });

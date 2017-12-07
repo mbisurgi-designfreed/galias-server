@@ -12,7 +12,7 @@ exports.getById = async (req, res, next) => {
 
 exports.getByCodigo = async (req, res, next) => {
     try {
-        const codigo = req.body.codigo;
+        const codigo = req.params.codigo;
 
         const cliente = await Cliente.findOne({ codigo });
 

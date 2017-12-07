@@ -52,6 +52,10 @@ const PedidoSchema = new Schema({
         required: true,
         ref: 'cliente'
     },
+    sucursal: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
     items: {
         type: [ItemSchema],
         required: true
