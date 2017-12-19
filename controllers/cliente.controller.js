@@ -22,6 +22,24 @@ exports.getByCodigo = async (req, res, next) => {
     }
 };
 
+exports.getClientes = async (req, res, next) => {
+    const SIZE = 30;
+
+    try {
+        const page = req.query.page;
+        const skip = page > 0 ? ((page - 1) * SIZE) : 0;
+
+        const cantidad = await Cliente.find({}).count();
+        const pages = Math.ceil(cantidad / SIZE);
+
+        const clientes = await Cliente.find({}).skip(skip).limit(SIZE);
+
+        res.send({ clientes, pages });
+    } catch (err) {
+        res.status(422).send({ err });
+    }
+};
+
 exports.insert = async (req, res, next) => {
     try {
         const cliente = await new Cliente(req.body).save();

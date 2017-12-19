@@ -89,11 +89,20 @@ const ClienteSchema = new Schema({
     sucursales: {
         type: [DireccionSchema]
     },
+    canal: {
+        type: String
+    },
+    subcanal: {
+        type: String
+    },
     clasificacion: {
         type: String,
         required: true,
         default: 'c',
         enum: CLASIFICACION
+    },
+    condicionPago: {
+        type: Number,
     },
     diaVisita: {
         type: String,
