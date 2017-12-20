@@ -8,7 +8,8 @@ const ESTADOS = ['generado', 'pendiente', 'completo'];
 const ItemSchema = new Schema({
     articulo: {
         type: Schema.Types.ObjectId,
-        ref: 'articulo'
+        ref: 'articulo',
+        require: true
     },
     promocion: {
         type: String,

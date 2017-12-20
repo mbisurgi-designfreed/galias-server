@@ -90,10 +90,12 @@ const ClienteSchema = new Schema({
         type: [DireccionSchema]
     },
     canal: {
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: 'canal'
     },
     subcanal: {
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: 'subcanal'
     },
     clasificacion: {
         type: String,

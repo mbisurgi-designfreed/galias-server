@@ -7,7 +7,8 @@ const ESTADOS = ['generado', 'entregado'];
 const ItemSchema = new Schema({
     articulo: {
         type: Schema.Types.ObjectId,
-        ref: 'articulo'
+        ref: 'articulo',
+        required: true
     },
     cantidad: {
         type: Number,
