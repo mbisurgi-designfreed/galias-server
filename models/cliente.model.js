@@ -107,12 +107,12 @@ const ClienteSchema = new Schema({
         type: Number,
     },
     diaVisita: {
-        type: String,
+        type: [String],
         required: true,
         enum: DIAS
     },
     diaEntrega: {
-        type: String,
+        type: [String],
         required: true,
         enum: DIAS
     },

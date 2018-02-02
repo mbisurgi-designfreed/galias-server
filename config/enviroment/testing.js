@@ -1,6 +1,6 @@
 module.exports = {
     mongo: {
-        url: 'mongodb://admin:maximati12@ds033196.mlab.com:33196/galia-integral-test'
+        url: 'mongodb://localhost:27017/galia-integral-test'
     },
     jwt: {
         secret: 'L5sf3suQxDAiepbrKmcB'

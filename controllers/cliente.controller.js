@@ -34,7 +34,7 @@ exports.getClientes = async (req, res, next) => {
 
         const clientes = await Cliente.find({}).skip(skip).limit(SIZE);
 
-        res.send({ clientes, pages });
+        res.status(200).send({ clientes, pages });
     } catch (err) {
         res.status(422).send({ err });
     }
@@ -44,7 +44,7 @@ exports.insert = async (req, res, next) => {
     try {
         const cliente = await new Cliente(req.body).save();
 
-        res.send(cliente);
+        res.status(201).send(cliente);
     } catch (err) {
         res.status(422).send({ err });
     }

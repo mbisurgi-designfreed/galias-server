@@ -1,84 +1,80 @@
-process.env.NODE_ENV = 'test';
-
 const mongoose = require('mongoose');
-const chai = require('chai');
-const http = require('chai-http');
-const server = require('../../index');
+const request = require('supertest');
+const expect = require('expect');
 
-const should = chai.should();
+const server = require('../../index');
 const Cliente = mongoose.model('cliente');
 
-chai.use(http);
+;
+const cliente = require('../fixtures/clientes').cliente;
+const clienteDefault = require('../fixtures/clientes').clienteDefault;
 
-describe('Clientes', () => {
-    beforeEach((done) => {
-        Cliente.remove({}, (err) => {
-            done();
-        });
-    });
+let clientes = [];
 
-    describe('/GET clientes', () => {
-        it('it should get all clientes', (done) => {
-                new Cliente({
-                    razonSocial: 'Maximiliano Bisurgi',
-                    direccion: {
-                        calle: 'Independencia',
-                        altura: '185',
-                        localidad: 'Monte Grande',
-                        codigoPostal: '1842'
-                    },
-                    diaVisita: 'lunes',
-                    diaEntrega: 'miercoles'
-                }).save((err, cliente) => {
-                    chai.request(server)
-                        .get(`/api/cliente/${cliente.id}`)
-                        .send(cliente)
-                        .end((err, res) => {
-                            res.body.should.have.property('razonSocial').eql(cliente.razonSocial);
-                            done();
-                        });
-                });
-        });
-    });
+beforeEach((done) => {
+    Cliente.remove({}, (err) => {
+        if (err) {
+            done(err);
+        }
 
-    describe('/POST cliente', () => {
-        beforeEach((done) => {
-            new Cliente({
-                razonSocial: 'Maximiliano Bisurgi',
-                direccion: {
-                    calle: 'Independencia',
-                    altura: '185',
-                    localidad: 'Monte Grande',
-                    codigoPostal: '1842'
-                },
-                diaVisita: 'lunes',
-                diaEntrega: 'miercoles'
-            }).save((err, cliente) => {
-                console.log(cliente);
+        Cliente.insertMany(require('../fixtures/clientes').clientes)
+            .then((docs) => {
+                clientes = docs;
                 done();
+            })
+            .catch((err) => {
+                done(err);
             });
+    });
+});
+
+describe('Clientes Controller', () => {
+    describe('GET /api/cliente/codigo/:codigo', () => {
+        it('should get a cliente by codigo', async () => {
+            const res = await request(server).get(`/api/cliente/codigo/${clientes[0].codigo}`);
+
+            expect(res.status).toBe(200);
+            expect(res.body.codigo).toBe(clientes[0].codigo);
+        });
+    });
+
+    describe('GET /api/cliente/list', () => {
+        it('should get all clientes with pagination', async () => {
+            const page = 1;
+
+            const res = await request(server).get(`/api/cliente/list?page=${page}`);
+            
+            expect(res.status).toBe(200);
+            expect(res.body.clientes.length).toBe(4);
+            expect(res.body.pages).toBe(1);
+        });
+    });
+
+    describe('POST /api/cliente/new', () => {
+        it('should add a new cliente with given values', async () => {
+            const res = await request(server).post('/api/cliente/new').send(cliente);
+
+            expect(res.status).toBe(201);
+            expect(res.body._id).toBeA('string');
+            expect(res.body).toInclude({ razonSocial: cliente.razonSocial, direccion: cliente.direccion });
         });
 
-        it('it should generate a new codigo + 1', (done) => {
-            new Cliente({
-                razonSocial: 'Claudio Bisurgi',
-                direccion: {
-                    calle: 'Ruta 52',
-                    altura: 'km 3,5',
-                    localidad: 'Canning',
-                    codigoPostal: '1804'
-                },
-                diaVisita: 'lunes',
-                diaEntrega: 'miercoles'
-            }).save((err, cliente) => {
-                chai.request(server)
-                .get(`/api/cliente/${cliente.id}`)
-                .send(cliente)
-                .end((err, res) => {
-                    res.body.should.have.property('codigo').eql(100002);
-                    done();
-                });
-            });
+        it('should add a new cliente with default values', async () => {
+            const res = await request(server).post('/api/cliente/new').send(clienteDefault);
+            
+            expect(res.status).toBe(201);
+            expect(res.body._id).toBeA('string');
+            expect(res.body).toInclude({ razonSocial: clienteDefault.razonSocial, clasificacion: 'c', sincronizado: false });
+            expect(res.body.telefonos).toEqual([]);
+            expect(res.body.sucursales).toEqual([]);
+            expect(res.body.personasInteres).toEqual([]);
+        });
+
+        it('should generate a new codigo adding + 1', async () => {
+            const res = await request(server).post('/api/cliente/new').send(cliente);
+
+            expect(res.status).toBe(201);
+            expect(res.body.codigo).toBe(1005);
         });
     });
 });

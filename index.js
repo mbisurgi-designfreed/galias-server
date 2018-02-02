@@ -9,6 +9,7 @@ const config = require('./config/config');
 const app = express();
 
 mongoose.connect(config.mongo.url, { useMongoClient: true });
+mongoose.Promise = Promise;
 
 require('./config/passport/passport');
 
@@ -24,6 +25,8 @@ io.on('connection', (socket) => {
 });
 
 require('./routes/auth.route')(app);
+require('./routes/canal.route')(app);
+require('./routes/subcanal.route')(app);
 require('./routes/cliente.route')(app);
 require('./routes/articulo.route')(app);
 require('./routes/info.route')(app, io);
