@@ -46,6 +46,20 @@ exports.insert = async (req, res, next) => {
 
         res.status(201).send(cliente);
     } catch (err) {
+        console.log(err);
+        res.status(422).send({ err });
+    }
+};
+
+exports.update = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        const cliente = await Cliente.findByIdAndUpdate(id, req.body);
+
+        res.status(201).send(cliente);
+    } catch (err) {
+        console.log(err);
         res.status(422).send({ err });
     }
 };

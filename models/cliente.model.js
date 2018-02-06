@@ -12,8 +12,7 @@ const LocationSchema = new Schema({
 
 const DireccionSchema = new Schema({
     calle: {
-        type: String,
-        required: true
+        type: String
     },
     altura: {
         type: String
@@ -39,7 +38,7 @@ const TelefonoSchema = new Schema({
 });
 
 const PersonaInteres = new Schema({
-    tipo: {
+    cargo: {
         type: String,
         required: true
     },
@@ -116,7 +115,7 @@ const ClienteSchema = new Schema({
         required: true,
         enum: DIAS
     },
-    personasInteres: {
+    personas: {
         type: [PersonaInteres]
     },
     sincronizado: {

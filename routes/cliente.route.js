@@ -9,4 +9,5 @@ module.exports = (app) => {
     app.get('/api/cliente/codigo/:codigo', ClienteController.getByCodigo);
     app.get('/api/cliente/list', ClienteController.getClientes);
     app.post('/api/cliente/new', ClienteController.insert);
+    app.put('/api/cliente/:id', ClienteController.update);
 };
