@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
+const IVA = ['ri', 'rs', 'cf', 'ex'];
 const DIAS = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
 const CLASIFICACION = ['a', 'b', 'c'];
 
@@ -71,6 +72,11 @@ const ClienteSchema = new Schema({
     },
     cuit: {
         type: String
+    },
+    iva: {
+        type: String,
+        required: true,
+        enum: IVA
     },
     nombreComercial: {
         type: String,
