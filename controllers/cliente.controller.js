@@ -32,7 +32,8 @@ exports.getClientes = async (req, res, next) => {
         const cantidad = await Cliente.find({}).count();
         const pages = Math.ceil(cantidad / SIZE);
 
-        const clientes = await Cliente.find({}).skip(skip).limit(SIZE);
+        // const clientes = await Cliente.find({}).skip(skip).limit(SIZE);
+        const clientes = await Cliente.find({});
 
         res.status(200).send({ clientes, pages });
     } catch (err) {
