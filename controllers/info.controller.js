@@ -35,7 +35,7 @@ module.exports = (io) => {
         try {
             const newInfo = await new Info(req.body).save();
 
-            io.sockets.sockets[req.headers.socket].broadcast.emit('newInfo', newInfo);
+            // io.sockets.sockets[req.headers.socket].broadcast.emit('newInfo', newInfo);
 
             const messages = await Promise.all(recipients.map(async (number) => {
                 await client.api.messages.create({

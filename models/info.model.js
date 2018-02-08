@@ -19,7 +19,7 @@ const DeudaSchema = new Schema({
 
 const InfoSchema = new Schema({
     fecha: {
-        type: Date,
+        type: Number,
         required: [true, 'Fecha es un valor requerido']
     },
     caja: {
