@@ -9,8 +9,11 @@ module.exports = (io) => {
     const recipients = ['+5491161984525', '+5491141759680', '+5491130121862'];
 
     action.list = async (req, res) => {
-        const desde = moment(new Date(req.query.desde)).subtract(3, 'hours');
-        const hasta = moment(new Date(req.query.hasta)).subtract(3, 'hours');
+        // const desde = moment(new Date(req.query.desde)).subtract(3, 'hours');
+        // const hasta = moment(new Date(req.query.hasta)).subtract(3, 'hours');
+
+        const desde = req.query.desde;
+        const hasta = req.query.hasta;
 
         try {
             const info = await Info.find({ fecha: { $gte: desde, $lte: hasta } }).sort({ fecha: -1 });
