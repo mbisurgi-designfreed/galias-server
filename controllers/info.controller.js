@@ -1,6 +1,7 @@
 const moment = require('moment');
 const twilio = require('twilio');
 const config = require('../config/config');
+const pusher = require('../config/pusher/pusher');
 const Info = require('../models/info.model');
 
 module.exports = (io) => {
@@ -11,6 +12,8 @@ module.exports = (io) => {
     action.list = async (req, res) => {
         // const desde = moment(new Date(req.query.desde)).subtract(3, 'hours');
         // const hasta = moment(new Date(req.query.hasta)).subtract(3, 'hours');
+
+        pusher.trigger('info', 'hello', { message: 'Hello World...from Pusher...info list' });
 
         const desde = req.query.desde;
         const hasta = req.query.hasta;
@@ -25,6 +28,8 @@ module.exports = (io) => {
     };
 
     action.listLast = async (req, res) => {
+        pusher.trigger('info', 'hello', { message: 'Hello World...from Pusher...info list last 5' });
+
         try {
             const info = await Info.find().sort({ fecha: -1 }).limit(5);
 
