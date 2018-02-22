@@ -45,7 +45,7 @@ const ItemSchema = new Schema({
 
 const PedidoSchema = new Schema({
     fecha: {
-        type: Date,
+        type: Number,
         required: true
     },
     cliente: {

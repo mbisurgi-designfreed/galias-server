@@ -2,10 +2,12 @@ const passport = require('passport');
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
-module.exports = (app, io) => {
-    const PedidoController = require('../controllers/pedido.controller')(io);
+module.exports = (app) => {
+    const PedidoController = require('../controllers/pedido.controller');
 
-    app.get('/api/pedido/list', PedidoController.list);
+    app.get('/api/pedido/fecha', PedidoController.list);
+
+    app.get('/api/pedido/today', PedidoController.listToday);
         
     app.post('/api/pedido/new', PedidoController.insert);
 };
