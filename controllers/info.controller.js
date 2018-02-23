@@ -4,7 +4,7 @@ const config = require('../config/config');
 const pusher = require('../config/pusher/pusher');
 const Info = require('../models/info.model');
 
-module.exports = (io) => {
+module.exports = () => {
     const action = {};
     const client = new twilio(config.twilio.accountSid, config.twilio.authToken);
     const recipients = ['+5491161984525', '+5491141759680', '+5491130121862'];

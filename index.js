@@ -20,7 +20,7 @@ require('./routes/canal.route')(app);
 require('./routes/subcanal.route')(app);
 require('./routes/cliente.route')(app);
 require('./routes/articulo.route')(app);
-require('./routes/info.route')(app, io);
+require('./routes/info.route')(app);
 require('./routes/pedido.route')(app);
 
 const PORT = process.env.PORT || 4000;
