@@ -8,7 +8,7 @@
     "npm": "5.0.3"
   },
   "scripts": {
-    "start": "node index",
+    "start": "nodemon index",
     "test": "export NODE_ENV=test && jest --config=jest.config.json"
   },
   "author": "Design Freed",
@@ -37,6 +37,7 @@
   "devDependencies": {
     "expect": "1.20.2",
     "jest": "20.0.4",
+    "nodemon": "^1.15.1",
     "supertest": "^3.0.0"
   }
 }
