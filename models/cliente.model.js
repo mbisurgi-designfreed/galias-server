@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const IVA = ['ri', 'rs', 'cf', 'ex'];
 const DIAS = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+const PROVEEDOR = ['calsa', 'no calsa'];
 const CLASIFICACION = ['a', 'b', 'c'];
 
 const LocationSchema = new Schema({
@@ -102,6 +103,11 @@ const ClienteSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'subcanal'
     },
+    proveedor: {
+        type: String,
+        required: true,
+        enum: PROVEEDOR
+    },
     clasificacion: {
         type: String,
         required: true,
@@ -110,6 +116,10 @@ const ClienteSchema = new Schema({
     },
     condicionPago: {
         type: Number,
+    },
+    vendedor: {
+        type: Schema.Types.ObjectId,
+        ref: 'vendedor'
     },
     diaVisita: {
         type: [String],
