@@ -21,7 +21,11 @@ exports.getByCodigo = async (req, res, next) => {
 
         res.send(cliente);
     } catch (err) {
-        res.status(422).send({ err });
+        const error = new Error('Ha ocurrido un error');
+        error.status = 500;
+
+        next(error);
+        //res.status(422).send({ err });
     }
 };
 
@@ -56,8 +60,22 @@ exports.insert = async (req, res, next) => {
 
         res.status(201).send(cliente);
     } catch (err) {
-        console.log(err);
-        res.status(422).send({ err });
+        console.error(err);
+
+        const error = new Error('Ha ocurrido un error');
+        error.status = 500;
+
+        if (err.name === 'ValidationError') {
+            error.message = 'Ha ocurrido un error. Verifique los datos ingresados'
+            error.status = 422;
+        }
+
+        if (err.name === 'ECONNREFUSED') {
+            error.message = 'Ha ocurrido un error. No se ha podido sincronizar el cliente'
+            error.status = 503;
+        }
+
+        next(error);
     }
 };
 
@@ -77,8 +95,22 @@ exports.update = async (req, res, next) => {
 
         res.status(201).send(cliente);
     } catch (err) {
-        console.log(err);
-        res.status(422).send({ err });
+        console.error(err);
+
+        const error = new Error('Ha ocurrido un error');
+        error.status = 500;
+
+        if (err.name === 'ValidationError') {
+            error.message = 'Ha ocurrido un error. Verifique los datos ingresados'
+            error.status = 422;
+        }
+
+        if (err.name === 'ECONNREFUSED' || err.response.status === 404) {
+            error.message = 'Ha ocurrido un error. No se ha podido sincronizar el cliente'
+            error.status = 503;
+        }
+
+        next(error);
     }
 };
 

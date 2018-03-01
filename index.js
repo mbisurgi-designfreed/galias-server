@@ -23,6 +23,12 @@ require('./routes/articulo.route')(app);
 require('./routes/info.route')(app);
 require('./routes/pedido.route')(app);
 
+app.use((err, req, res, next) => {
+    const status = err.status || 500;
+
+    res.status(status).send(err.message);
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server started, listening on port ${PORT}`);
