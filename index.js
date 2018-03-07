@@ -16,6 +16,7 @@ app.use(parser.json());
 app.use(parser.urlencoded({ extended: false }));
 
 require('./routes/auth.route')(app);
+require('./routes/unidad.route')(app);
 require('./routes/canal.route')(app);
 require('./routes/subcanal.route')(app);
 require('./routes/cliente.route')(app);

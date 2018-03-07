@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const IVA = ['ri', 'rs', 'cf', 'ex'];
 const DIAS = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
-const PROVEEDOR = ['calsa', 'no calsa'];
+const DIVISION = ['calsa', 'no calsa'];
 const CLASIFICACION = ['a', 'b', 'c'];
 
 const LocationSchema = new Schema({
@@ -106,7 +106,7 @@ const ClienteSchema = new Schema({
     division: {
         type: String,
         required: true,
-        enum: PROVEEDOR
+        enum: DIVISION
     },
     clasificacion: {
         type: String,
