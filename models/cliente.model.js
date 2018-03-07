@@ -103,7 +103,7 @@ const ClienteSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'subcanal'
     },
-    proveedor: {
+    division: {
         type: String,
         required: true,
         enum: PROVEEDOR
