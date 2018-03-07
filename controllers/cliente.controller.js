@@ -70,7 +70,7 @@ exports.insert = async (req, res, next) => {
             error.status = 422;
         }
 
-        if (err.name === 'ECONNREFUSED') {
+        if (err.code === 'ECONNREFUSED' || err.response.status === 404) {
             error.message = 'Ha ocurrido un error. No se ha podido sincronizar el cliente'
             error.status = 503;
         }
@@ -105,7 +105,7 @@ exports.update = async (req, res, next) => {
             error.status = 422;
         }
 
-        if (err.name === 'ECONNREFUSED' || err.response.status === 404) {
+        if (err.code === 'ECONNREFUSED' || err.response.status === 404) {
             error.message = 'Ha ocurrido un error. No se ha podido sincronizar el cliente'
             error.status = 503;
         }
