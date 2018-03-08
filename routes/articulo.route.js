@@ -6,6 +6,6 @@ module.exports = (app) => {
     const ArticuloController = require('../controllers/articulo.controller');
 
     app.get('/api/articulo/list', ArticuloController.list);
-
     app.post('/api/articulo/new', ArticuloController.insert);
+    app.put('/api/articulo/:id', ArticuloController.update);
 };
