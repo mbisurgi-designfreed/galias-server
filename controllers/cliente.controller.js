@@ -7,9 +7,14 @@ exports.getById = async (req, res, next) => {
     try {
         const cliente = await Cliente.findById(req.params.id);
 
-        res.send(cliente);
+        res.status(200).send(cliente);
     } catch (err) {
-        res.status(422).send({ err });
+        console.log(err);
+
+        const error = new Error('Ha ocurrido un error');
+        error.status = 500;
+
+        next(error);
     }
 };
 
@@ -19,13 +24,14 @@ exports.getByCodigo = async (req, res, next) => {
 
         const cliente = await Cliente.findOne({ codigo });
 
-        res.send(cliente);
+        res.status(200).send(cliente);
     } catch (err) {
+        console.log(err);
+
         const error = new Error('Ha ocurrido un error');
         error.status = 500;
 
         next(error);
-        //res.status(422).send({ err });
     }
 };
 
@@ -44,7 +50,12 @@ exports.getClientes = async (req, res, next) => {
 
         res.status(200).send({ clientes });
     } catch (err) {
-        res.status(422).send({ err });
+        console.log(err);
+
+        const error = new Error('Ha ocurrido un error');
+        error.status = 500;
+
+        next(error);
     }
 };
 

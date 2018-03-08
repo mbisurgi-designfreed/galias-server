@@ -89,7 +89,7 @@ const ArticuloSchema = new Schema({
 ArticuloSchema.pre('save', async function (next) {
     const newArticulo = this;
 
-    const historicoPrecioCpa = new HistoricoPrecioCpa({ articulo: newArticulo._id, fecha: moment().valueOf(), precio: newArticulo.precioVta });
+    const historicoPrecioCpa = new HistoricoPrecioCpa({ articulo: newArticulo._id, fecha: moment().valueOf(), precio: newArticulo.precioCpa });
     await historicoPrecioCpa.save();
 
     const historicoPrecioVta = new HistoricoPrecioVta({ articulo: newArticulo._id, fecha: moment().valueOf(), precio: newArticulo.precioVta });
