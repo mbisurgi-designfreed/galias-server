@@ -30,42 +30,42 @@ const ArticuloSchema = new Schema({
         type: String,
         required: true
     },
-    // descripcion: {
-    //     type: String,
-    //     required: true
-    // },
-    // proveedor: {
-    //     type: String,
-    //     required: true,
-    //     enum: PROVEEDOR
-    // },
-    // iva: {
-    //     type: Number,
-    //     required: true,
-    //     enum: IVA
-    // },
-    // kilos: {
-    //     type: Number,
-    //     required: true
-    // },
-    // lote: {
-    //     type: Boolean,
-    //     required: true
-    // },
-    // unidadStock: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'unidad'
-    // },
-    // unidadCpa: {
-    //     type: [EquivalenciaSchema],
-    //     required: true,
-    //     default: false
-    // },
-    // unidadVta: {
-    //     type: [EquivalenciaSchema],
-    //     required: true,
-    //     default: false
-    // },
+    descripcion: {
+        type: String,
+        required: true
+    },
+    proveedor: {
+        type: String,
+        required: true,
+        enum: PROVEEDOR
+    },
+    iva: {
+        type: Number,
+        required: true,
+        enum: IVA
+    },
+    kilos: {
+        type: Number,
+        required: true
+    },
+    lote: {
+        type: Boolean,
+        required: true
+    },
+    unidadStock: {
+        type: Schema.Types.ObjectId,
+        ref: 'unidad'
+    },
+    unidadesCpa: {
+        type: [EquivalenciaSchema],
+        required: true,
+        default: false
+    },
+    unidadesVta: {
+        type: [EquivalenciaSchema],
+        required: true,
+        default: false
+    },
     precioCpa: {
         type: Number
     },
