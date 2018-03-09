@@ -58,13 +58,11 @@ const ArticuloSchema = new Schema({
     },
     unidadesCpa: {
         type: [EquivalenciaSchema],
-        required: true,
-        default: false
+        required: true
     },
     unidadesVta: {
         type: [EquivalenciaSchema],
-        required: true,
-        default: false
+        required: true
     },
     precioCpa: {
         type: Number
