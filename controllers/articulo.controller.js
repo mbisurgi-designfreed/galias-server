@@ -1,3 +1,6 @@
+const axios = require('axios');
+
+const config = require('../config/config');
 const Articulo = require('../models/articulo.model');
 
 exports.list = async (req, res, next) => {
@@ -19,11 +22,11 @@ exports.insert = async (req, res, next) => {
     try {
         let articulo = await new Articulo(req.body).save();
 
-        // const sync = await axios.post(`${config.spring.url}/articulo/new`, articulo);
+        const sync = await axios.post(`${config.spring.url}/articulo/new`, articulo);
 
-        // if (sync.status === 200) {
-        //     articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
-        // }
+        if (sync.status === 200) {
+            articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
+        }
 
         res.status(201).send(articulo);
     } catch (err) {
@@ -52,13 +55,13 @@ exports.update = async (req, res, next) => {
 
         let articulo = await Articulo.findByIdAndUpdateWithPrecio(id, { ...req.body, sincronizado: false });
 
-        // const sync = await axios.patch(`${config.spring.url}/articulo/update`, articulo);
+        const sync = await axios.patch(`${config.spring.url}/articulo/update`, articulo);
 
-        // if (sync.status === 204) {
-        //     articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
-        // } else {
-        //     articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: false }, { new: true });
-        // }
+        if (sync.status === 204) {
+            articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
+        } else {
+            articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: false }, { new: true });
+        }
 
         res.status(201).send(articulo);
     } catch (err) {
