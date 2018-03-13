@@ -11,13 +11,13 @@ const VendedorSchema = new Schema({
         type: String,
         required: true
     },
-    email: {
-        type: String,
-        required: true
-    },
     celular: {
         type: String,
         required: true
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'user'
     }
 });
 
