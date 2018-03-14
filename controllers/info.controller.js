@@ -8,8 +8,6 @@ const client = new twilio(config.twilio.accountSid, config.twilio.authToken);
 const recipients = ['+5491161984525', '+5491141759680', '+5491130121862'];
 
 exports.list = async (req, res) => {
-    pusher.trigger('info', 'hello', { message: 'Hello World...from Pusher...info list' });
-
     const desde = req.query.desde;
     const hasta = req.query.hasta;
 
@@ -23,8 +21,6 @@ exports.list = async (req, res) => {
 };
 
 exports.listLast = async (req, res) => {
-    pusher.trigger('info', 'hello', { message: 'Hello World...from Pusher...info list last 5' });
-
     try {
         const info = await Info.find().sort({ fecha: -1 }).limit(5);
 
