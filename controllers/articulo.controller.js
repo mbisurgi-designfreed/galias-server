@@ -22,7 +22,11 @@ exports.insert = async (req, res, next) => {
     try {
         let articulo = await new Articulo(req.body).save();
 
-        const sync = await axios.post(`${config.spring.url}/articulo/new`, articulo);
+        const art = await Articulo.findById(articulo.id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
+
+        console.log(art);
+
+        const sync = await axios.post(`${config.spring.url}/articulo/new`, art);
 
         if (sync.status === 200) {
             articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
