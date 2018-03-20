@@ -59,9 +59,11 @@ exports.update = async (req, res, next) => {
 
         let articulo = await Articulo.findByIdAndUpdateWithPrecio(id, { ...req.body, sincronizado: false });
 
-        const sync = await axios.patch(`${config.spring.url}/articulo/update`, articulo);
+        const art = await Articulo.findById(articulo.id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
 
-        if (sync.status === 204) {
+        const sync = await axios.patch(`${config.spring.url}/articulo/update`, art);
+
+        if (sync.status === 200) {
             articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
         } else {
             articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: false }, { new: true });
