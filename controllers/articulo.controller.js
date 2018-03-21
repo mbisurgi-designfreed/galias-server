@@ -90,3 +90,31 @@ exports.update = async (req, res, next) => {
     }
 };
 
+exports.updatePrecios = async (req, res, next) => {
+    try {
+        const articulos = await req.body.map(async (articulo) => {
+            console.log('updatePrecio()', 'articulo');
+            return await Articulo.findByIdAndUpdateWithPrecio(articulo._id, { ...articulo, sincronizado: false });
+        })
+
+        res.status(201).send(articulos);
+    } catch (err) {
+        console.log(err);
+
+        const error = new Error('Ha ocurrido un error');
+        error.status = 500;
+
+        if (err.name === 'ValidationError') {
+            error.message = 'Ha ocurrido un error. Verifique los datos ingresados'
+            error.status = 422;
+        }
+
+        if (err.code === 'ECONNREFUSED' || err.response.status === 404) {
+            error.message = 'Ha ocurrido un error. No se ha podido sincronizar el cliente'
+            error.status = 503;
+        }
+
+        next(error);
+    }
+};
+
