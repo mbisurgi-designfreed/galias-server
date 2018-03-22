@@ -3,6 +3,7 @@ const _ = require('lodash');
 
 const Schema = mongoose.Schema;
 
+const PROMOCIONES = ['a+b', '%', 'sin'];
 const ESTADOS = ['generado', 'pendiente', 'completo'];
 
 const ItemSchema = new Schema({
@@ -13,7 +14,8 @@ const ItemSchema = new Schema({
     },
     promocion: {
         type: String,
-        required: true
+        required: true,
+        enum: PROMOCIONES
     },
     cantidad: {
         type: Number,
@@ -31,7 +33,7 @@ const ItemSchema = new Schema({
         type: Boolean,
         required: true
     },
-    cantidadPendiente: {
+    pendiente: {
         type: Number,
         required: true
     },
@@ -56,6 +58,9 @@ const PedidoSchema = new Schema({
     sucursal: {
         type: Schema.Types.ObjectId,
         required: true
+    },
+    comentario: {
+        type: String
     },
     items: {
         type: [ItemSchema],

@@ -5,7 +5,7 @@ const Articulo = require('../models/articulo.model');
 
 exports.list = async (req, res, next) => {
     try {
-        const articulos = await Articulo.find();
+        const articulos = await Articulo.find().select('-historicoPrecioCpa -historicoPrecioVta');
 
         res.status(200).send({ articulos });
     } catch (err) {
@@ -90,12 +90,21 @@ exports.update = async (req, res, next) => {
     }
 };
 
-exports.updatePrecios = async (req, res, next) => {
+exports.precios = async (req, res, next) => {
     try {
-        const articulos = await req.body.map(async (articulo) => {
-            console.log('updatePrecio()', 'articulo');
+        const articulos = await Promise.all(req.body.map(async (articulo) => {
             return await Articulo.findByIdAndUpdateWithPrecio(articulo._id, { ...articulo, sincronizado: false });
-        })
+        }));
+
+        // const arts = await Articulo.findById({}).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
+
+        // const sync = await axios.patch(`${config.spring.url}/articulo/update/precios`, arts);
+
+        // if (sync.status === 200) {
+        //     articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
+        // } else {
+        //     articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: false }, { new: true });
+        // }
 
         res.status(201).send(articulos);
     } catch (err) {
