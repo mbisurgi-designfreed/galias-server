@@ -1,5 +1,7 @@
+const mongoose = require('mongoose');
 const moment = require('moment');
 
+const email = require('../config/email/email');
 const pusher = require('../config/pusher/pusher');
 const Pedido = require('../models/pedido.model');
 const Cliente = require('../models/cliente.model');
@@ -34,6 +36,26 @@ exports.listToday = async (req, res) => {
     }
 };
 
+exports.pendienteCliente = async (req, res) => {
+    const cliente = mongoose.Types.ObjectId(req.params.cliente);
+
+    try {
+        const pedidos = await Pedido.find({ cliente, 'items.pendiente': { $gt: 0 } })
+            .populate('items.articulo', 'id descripcion');
+
+        // const pedidos = await Pedido.aggregate([
+        //     { $match: { cliente, 'items.pendiente': { $gt: 0 } } },
+        //     { $unwind: '$items' },
+        // ]);
+
+        // await Pedido.populate(pedidos, { path: 'items.articulo', select: 'id descripcion' });
+
+        res.send(pedidos);
+    } catch (err) {
+        res.status(422).send({ err });
+    }
+}
+
 exports.insert = async (req, res) => {
     try {
         req.body.enviado = undefined;
@@ -47,6 +69,15 @@ exports.insert = async (req, res) => {
         const pedido = await new Pedido(req.body).save();
 
         pusher.trigger('crm', 'pedido', { pedido: pedido._id, cliente: req.body.cliente.razonSocial });
+
+        const mail = {
+            from: 'pedidos@galia.com.ar',
+            to: 'pedidos@galia.com.ar',
+            subject: `Nuevo pedido - ${req.body.cliente.razonSocial}`,
+            text: `Se ha generado un nuevo pedido con numero ${pedido._id}. Para verlo ingrese a http://localhost:8080/pedidos/`
+        };
+
+        email.sendMail(mail);
 
         res.send(pedido);
     } catch (err) {
