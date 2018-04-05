@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const moment = require('moment');
 const _ = require('lodash');
 
 const Remito = require('../models/remito.model');
@@ -10,6 +11,20 @@ exports.list = async (req, res) => {
 
     try {
         const remitos = await Remito.find({ fecha: { $gte: desde, $lte: hasta } })
+            .populate('cliente', 'id razonSocial')
+            .populate('items.articulo', 'id descripcion');
+
+        res.send(remitos);
+    } catch (err) {
+        res.status(422).send({ err });
+    }
+};
+
+exports.listToday = async (req, res) => {
+    const today = moment(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+
+    try {
+        const remitos = await Remito.find({ fecha: today })
             .populate('cliente', 'id razonSocial')
             .populate('items.articulo', 'id descripcion');
 

@@ -7,5 +7,7 @@ module.exports = (app) => {
 
     app.get('/api/remito/fecha', RemitoController.list);
 
+    app.get('/api/remito/today', RemitoController.listToday);
+
     app.post('/api/remito/new', RemitoController.insert);
 };
