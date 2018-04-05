@@ -41,7 +41,7 @@ exports.pendienteCliente = async (req, res) => {
 
     try {
         const pedidos = await Pedido.find({ cliente, 'items.pendiente': { $gt: 0 } })
-            .populate('items.articulo', 'id descripcion');
+            .populate('items.articulo', 'id codigo descripcion kilos');
 
         // const pedidos = await Pedido.aggregate([
         //     { $match: { cliente, 'items.pendiente': { $gt: 0 } } },

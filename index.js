@@ -26,6 +26,7 @@ require('./routes/cliente.route')(app);
 require('./routes/articulo.route')(app);
 require('./routes/info.route')(app);
 require('./routes/pedido.route')(app);
+require('./routes/remito.route')(app);
 
 app.use((err, req, res, next) => {
     const status = err.status || 500;

@@ -6,6 +6,29 @@ const Schema = mongoose.Schema;
 const PROMOCIONES = ['a+b', '%', 'sin'];
 const ESTADOS = ['generado', 'pendiente', 'completo'];
 
+const LocationSchema = new Schema({
+    type: { type: String, default: 'Point' },
+    coordinates: { type: [Number], index: '2dsphere' }
+});
+
+const DireccionSchema = new Schema({
+    calle: {
+        type: String
+    },
+    altura: {
+        type: String
+    },
+    localidad: {
+        type: String
+    },
+    codigoPostal: {
+        type: String
+    },
+    geometry: {
+        type: LocationSchema
+    }
+});
+
 const ItemSchema = new Schema({
     articulo: {
         type: Schema.Types.ObjectId,
@@ -56,7 +79,7 @@ const PedidoSchema = new Schema({
         ref: 'cliente'
     },
     sucursal: {
-        type: Schema.Types.ObjectId,
+        type: DireccionSchema,
         required: true
     },
     comentario: {
