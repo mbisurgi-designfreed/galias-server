@@ -1,7 +1,8 @@
-const mongoose = require('mongoose');
+const axios = require('axios');
 const moment = require('moment');
 const _ = require('lodash');
 
+const config = require('../config/config');
 const Remito = require('../models/remito.model');
 const Pedido = require('../models/pedido.model');
 
@@ -36,25 +37,37 @@ exports.listToday = async (req, res) => {
 
 exports.insert = async (req, res) => {
     try {
-        const remito = await new Remito(req.body).save();
+        let remito = await new Remito(req.body).save();
 
         if (remito) {
             const pedido = await Pedido.findById(remito.pedido);
 
             remito.items.forEach(item => {
-                console.log('forEach', item);
-                console.log('forEach', pedido.items);
                 const index = _.findIndex(pedido.items, { _id: item.item });
-                console.log(index);
                 const pendiente = pedido.items[index].pendiente;
-                console.log(pendiente);
 
                 pedido.items[index].pendiente = pendiente - item.cantidad;
+
+                pedido.items[index].pendiente === 0 ? pedido.items[index].estado = 'completo' : pedido.items[index].estado = 'pendiente';
             });
 
-            console.log(pedido);
+            const pendientes = pedido.items.filter((item) => {
+                return item.estado !== 'completo';
+            });
+
+            pendientes.length > 0 ? pedido.estado = 'pendiente' : pedido.estado = 'completo';
 
             await Pedido.findByIdAndUpdate(pedido._id, pedido);
+        }
+
+        const rem = await Remito.findById(remito.id)
+            .populate('cliente', 'codigo razonSocial')
+            .populate('items.articulo', 'codigo descripcion');
+
+        const sync = await axios.post(`${config.spring.url}/remito/new`, rem);
+        
+        if (sync.status === 200) {
+            remito = await Remito.findByIdAndUpdate(remito.id, { sincronizado: true }, { new: true });
         }
 
         res.send(remito);
