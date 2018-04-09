@@ -29,6 +29,10 @@ const RemitoSchema = new Schema({
         type: Date,
         required: true
     },
+    numero: {
+        type: String,
+        required: true
+    },
     cliente: {
         type: Schema.Types.ObjectId,
         required: true,

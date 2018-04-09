@@ -5,6 +5,7 @@ const _ = require('lodash');
 const config = require('../config/config');
 const Remito = require('../models/remito.model');
 const Pedido = require('../models/pedido.model');
+const Talonario = require('../models/talonario.model');
 
 exports.list = async (req, res) => {
     const desde = req.query.desde;
@@ -37,9 +38,13 @@ exports.listToday = async (req, res) => {
 
 exports.insert = async (req, res) => {
     try {
-        let remito = await new Remito(req.body).save();
+        const talonario = await Talonario.findOne({ habilitado: true });
+
+        let remito = await new Remito({ ...req.body, numero: generarNroRemito(talonario.proximo) }).save();
 
         if (remito) {
+            await Talonario.findByIdAndUpdate(talonario.id, { $inc: { proximo: 1 } });
+
             const pedido = await Pedido.findById(remito.pedido);
 
             remito.items.forEach(item => {
@@ -65,7 +70,7 @@ exports.insert = async (req, res) => {
             .populate('items.articulo', 'codigo descripcion');
 
         const sync = await axios.post(`${config.spring.url}/remito/new`, rem);
-        
+
         if (sync.status === 200) {
             remito = await Remito.findByIdAndUpdate(remito.id, { sincronizado: true }, { new: true });
         }
@@ -76,3 +81,7 @@ exports.insert = async (req, res) => {
         res.status(422).send({ err });
     }
 };
+
+function generarNroRemito(numero) {
+    return `R0001-${numero.toString().padStart(8, '0')}`;
+}
