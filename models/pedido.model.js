@@ -3,7 +3,31 @@ const _ = require('lodash');
 
 const Schema = mongoose.Schema;
 
+const PROMOCIONES = ['a+b', '%', 'sin'];
 const ESTADOS = ['generado', 'pendiente', 'completo'];
+
+const LocationSchema = new Schema({
+    type: { type: String, default: 'Point' },
+    coordinates: { type: [Number], index: '2dsphere' }
+});
+
+const DireccionSchema = new Schema({
+    calle: {
+        type: String
+    },
+    altura: {
+        type: String
+    },
+    localidad: {
+        type: String
+    },
+    codigoPostal: {
+        type: String
+    },
+    geometry: {
+        type: LocationSchema
+    }
+});
 
 const ItemSchema = new Schema({
     articulo: {
@@ -13,7 +37,8 @@ const ItemSchema = new Schema({
     },
     promocion: {
         type: String,
-        required: true
+        required: true,
+        enum: PROMOCIONES
     },
     cantidad: {
         type: Number,
@@ -31,7 +56,7 @@ const ItemSchema = new Schema({
         type: Boolean,
         required: true
     },
-    cantidadPendiente: {
+    pendiente: {
         type: Number,
         required: true
     },
@@ -54,8 +79,11 @@ const PedidoSchema = new Schema({
         ref: 'cliente'
     },
     sucursal: {
-        type: Schema.Types.ObjectId,
+        type: DireccionSchema,
         required: true
+    },
+    comentario: {
+        type: String
     },
     items: {
         type: [ItemSchema],

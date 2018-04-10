@@ -1,10 +1,14 @@
 const mongoose = require('mongoose');
+const _ = require('lodash');
 
 const Schema = mongoose.Schema;
 
 const ESTADOS = ['generado', 'entregado'];
 
 const ItemSchema = new Schema({
+    item: {
+        type: Schema.Types.ObjectId
+    },
     articulo: {
         type: Schema.Types.ObjectId,
         ref: 'articulo',
@@ -25,8 +29,17 @@ const RemitoSchema = new Schema({
         type: Date,
         required: true
     },
+    numero: {
+        type: String,
+        required: true
+    },
+    cliente: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'cliente'
+    },
     pedido: {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         required: true,
         ref: 'pedido'
     },

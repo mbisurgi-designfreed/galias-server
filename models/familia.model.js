@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const GrupoSchema = new Schema({
+const FamiliaSchema = new Schema({
     codigo: {
         type: Number,
         required: true
@@ -10,14 +10,9 @@ const GrupoSchema = new Schema({
     nombre: {
         type: String,
         required: true
-    },
-    familia: {
-        type: Schema.Types.ObjectId,
-        ref: 'familia',
-        required: true
     }
 });
 
-const Grupo = mongoose.model('grupo', GrupoSchema, 'grupos');
+const Grupo = mongoose.model('familia', FamiliaSchema, 'familias');
 
 module.exports = Grupo;
