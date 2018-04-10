@@ -61,11 +61,12 @@ exports.update = async (req, res, next) => {
 
         // const sync = await axios.patch(`${config.spring.url}/articulo/update`, art);
 
-        if (sync.status === 200) {
-            articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
-        } else {
-            articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: false }, { new: true });
-        }
+        // if (sync.status === 200) {
+        //     articulo = await Articulo.findByIdAn
+        //     dUpdate(articulo._id, { sincronizado: true }, { new: true });
+        // } else {
+        //     articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: false }, { new: true });
+        // }
 
         res.status(201).send(articulo);
     } catch (err) {
