@@ -22,13 +22,13 @@ exports.insert = async (req, res, next) => {
     try {
         let articulo = await new Articulo(req.body).save();
 
-        const art = await Articulo.findById(articulo.id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
+        // const art = await Articulo.findById(articulo.id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
 
-        const sync = await axios.post(`${config.spring.url}/articulo/new`, art);
+        // const sync = await axios.post(`${config.spring.url}/articulo/new`, art);
 
-        if (sync.status === 200) {
-            articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
-        }
+        // if (sync.status === 200) {
+        //     articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
+        // }
 
         res.status(201).send(articulo);
     } catch (err) {
@@ -55,11 +55,11 @@ exports.update = async (req, res, next) => {
     try {
         const id = req.params.id;
 
-        let articulo = await Articulo.findByIdAndUpdateWithPrecio(id, { ...req.body, sincronizado: false });
+        // let articulo = await Articulo.findByIdAndUpdateWithPrecio(id, { ...req.body, sincronizado: false });
 
-        const art = await Articulo.findById(articulo.id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
+        // const art = await Articulo.findById(articulo.id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
 
-        const sync = await axios.patch(`${config.spring.url}/articulo/update`, art);
+        // const sync = await axios.patch(`${config.spring.url}/articulo/update`, art);
 
         if (sync.status === 200) {
             articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
