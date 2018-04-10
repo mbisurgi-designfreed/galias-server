@@ -78,6 +78,10 @@ const ArticuloSchema = new Schema({
         type: [Schema.Types.ObjectId],
         ref: 'historicoPrecioVta'
     },
+    familia: {
+        type: Schema.Types.ObjectId,
+        ref: 'familia'
+    },
     grupo: {
         type: Schema.Types.ObjectId,
         ref: 'grupo'
