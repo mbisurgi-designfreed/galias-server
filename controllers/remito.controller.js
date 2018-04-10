@@ -83,5 +83,5 @@ exports.insert = async (req, res) => {
 };
 
 function generarNroRemito(numero) {
-    return `R0001-${numero.toString().padStart(8, '0')}`;
+    return `R0002${numero.toString().padStart(8, '0')}`;
 }

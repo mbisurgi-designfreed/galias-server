@@ -24,8 +24,6 @@ exports.insert = async (req, res, next) => {
 
         const art = await Articulo.findById(articulo.id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
 
-        console.log(art);
-
         const sync = await axios.post(`${config.spring.url}/articulo/new`, art);
 
         if (sync.status === 200) {
