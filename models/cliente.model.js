@@ -144,15 +144,17 @@ ClienteSchema.pre('save', async function (next) {
     const model = mongoose.model('cliente');
     const cliente = this;
 
-    let codigo = await model.findOne({}, '-_id codigo').sort({ codigo: -1 }).limit(1);
+    const codigo = await model.findOne({}, '-_id codigo').sort({ codigo: -1 }).limit(1);
  
-    if (codigo) {
-        codigo++;
+    let nextCodigo = codigo.codigo;
+
+    if (nextCodigo) {
+        nextCodigo++;
     } else {
-        codigo = 100001;
+        nextCodigo = 100001;
     }
 
-    this.codigo = codigo;
+    this.codigo = nextCodigo;
 
     next();
 });
