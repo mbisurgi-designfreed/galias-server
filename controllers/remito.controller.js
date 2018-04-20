@@ -13,8 +13,8 @@ exports.list = async (req, res) => {
 
     try {
         const remitos = await Remito.find({ fecha: { $gte: desde, $lte: hasta } })
-            .populate('cliente', 'id razonSocial')
-            .populate('items.articulo', 'id descripcion');
+            .populate('cliente', 'id codigo razonSocial')
+            .populate('items.articulo', 'id codigo descripcion kilos');
 
         res.send(remitos);
     } catch (err) {
@@ -27,8 +27,8 @@ exports.listToday = async (req, res) => {
 
     try {
         const remitos = await Remito.find({ fecha: today })
-            .populate('cliente', 'id razonSocial')
-            .populate('items.articulo', 'id descripcion');
+            .populate('cliente', 'id codigo razonSocial')
+            .populate('items.articulo', 'id codigo descripcion kilos');
 
         res.send(remitos);
     } catch (err) {
