@@ -40,10 +40,12 @@ exports.insert = async (req, res) => {
     try {
         const talonario = await Talonario.findOne({ habilitado: true });
 
-        let remito = await new Remito({ ...req.body, numero: generarNroRemito(talonario.proximo) }).save();
+        let remito = await new Remito({ ...req.body.remito, numero: generarNroRemito(req.body.proximo) }).save();
 
         if (remito) {
-            await Talonario.findByIdAndUpdate(talonario.id, { $inc: { proximo: 1 } });
+            const proximo = req.body.proximo + 1;
+
+            await Talonario.findByIdAndUpdate(talonario.id, { $set: { proximo } });
 
             const pedido = await Pedido.findById(remito.pedido);
 

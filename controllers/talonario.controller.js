@@ -10,3 +10,14 @@ exports.insert = async (req, res) => {
         res.status(422).send({ err });
     }
 };
+
+exports.proximo = async (req, res) => {
+    try {
+        const talonario = await Talonario.findOne({ habilitado: true });
+
+        res.send(talonario);
+    } catch (err) {
+        console.log(err);
+        res.status(422).send({ err });
+    }
+}

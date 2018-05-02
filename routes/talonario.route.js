@@ -6,4 +6,5 @@ module.exports = (app) => {
     const TalonarioController = require('../controllers/talonario.controller');
 
     app.post('/api/talonario/new', TalonarioController.insert);
+    app.get('/api/talonario/proximo', TalonarioController.proximo);
 };
