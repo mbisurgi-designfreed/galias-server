@@ -52,10 +52,6 @@ const ItemSchema = new Schema({
         type: Number,
         required: true
     },
-    extra: {
-        type: Boolean,
-        required: true
-    },
     pendiente: {
         type: Number,
         required: true
@@ -92,6 +88,10 @@ const PedidoSchema = new Schema({
     total: {
         type: Number,
         default: 0
+    },
+    extra: {
+        type: Boolean,
+        required: true
     },
     estado: {
         type: String,

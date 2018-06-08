@@ -67,14 +67,23 @@ exports.insert = async (req, res) => {
             await Pedido.findByIdAndUpdate(pedido._id, pedido);
         }
 
-        const rem = await Remito.findById(remito.id)
-            .populate('cliente', 'codigo razonSocial')
-            .populate('items.articulo', 'codigo descripcion');
+        res.send(remito);
+    } catch (err) {
+        console.log(err);
+        res.status(422).send({ err });
+    }
+};
 
-        const sync = await axios.post(`${config.spring.url}/remito/new`, rem);
+exports.sync = async (req, res) => {
+    try {
+        const talonario = await Talonario.findOne({ habilitado: true });
+
+        let remito = await new Remito({ ...req.body.remito, numero: generarNroRemito(req.body.proximo) });
+
+        const sync = await axios.post(`${config.spring.url}/remito/new`, remito);
 
         if (sync.status === 200) {
-            remito = await Remito.findByIdAndUpdate(remito.id, { sincronizado: true }, { new: true });
+            res.send(remito);
         }
 
         res.send(remito);

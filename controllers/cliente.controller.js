@@ -2,6 +2,7 @@ const axios = require('axios');
 
 const config = require('../config/config');
 const Cliente = require('../models/cliente.model');
+const Pedido = require('../models/pedido.model');
 
 exports.getById = async (req, res, next) => {
     try {
@@ -120,6 +121,46 @@ exports.update = async (req, res, next) => {
             error.message = 'Ha ocurrido un error. No se ha podido sincronizar el cliente'
             error.status = 503;
         }
+
+        next(error);
+    }
+};
+
+exports.pendiente = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        let pedidos = await Pedido.find({ cliente: id })
+            .populate('items.articulo', 'id codigo descripcion kilos');
+
+        pedidos = pedidos.filter((pedido) => {
+            return pedido.estado !== 'completo';
+        });
+
+        const articulos = {};
+
+        pedidos.map((pedido) => {
+            pedido.items.map((item) => {
+                if (articulos[item.articulo._id]) {
+                    const pendiente = articulos[item.articulo._id].cantidad + item.pendiente;
+
+                    articulos[item.articulo._id].cantidad = pendiente;
+                } else {
+                    articulos[item.articulo._id] = {
+                        codigo: item.articulo.codigo,
+                        descripcion: item.articulo.descripcion,
+                        cantidad: item.pendiente
+                    }
+                }
+            });
+        })
+
+        res.send(articulos);
+    } catch (err) {
+        console.log(err);
+
+        const error = new Error('Ha ocurrido un error');
+        error.status = 500;
 
         next(error);
     }

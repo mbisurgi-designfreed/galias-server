@@ -19,9 +19,14 @@ const TalonarioSchema = new Schema({
         type: Number,
         required: true
     },
-    habilitado: {
+    tango: {
         type: Boolean,
         required: true
+    },
+    habilitado: {
+        type: Boolean,
+        required: true,
+        default: true
     }
 });
 

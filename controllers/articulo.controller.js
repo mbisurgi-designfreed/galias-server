@@ -2,6 +2,7 @@ const axios = require('axios');
 
 const config = require('../config/config');
 const Articulo = require('../models/articulo.model');
+const Pedido = require('../models/pedido.model');
 
 exports.list = async (req, res, next) => {
     try {
@@ -95,9 +96,9 @@ exports.precios = async (req, res, next) => {
             return await Articulo.findByIdAndUpdateWithPrecio(articulo._id, { ...articulo, sincronizado: false });
         }));
 
-        // const arts = await Articulo.findById({}).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
+        const arts = await Articulo.find().populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
 
-        // const sync = await axios.patch(`${config.spring.url}/articulo/update/precios`, arts);
+        const sync = await axios.patch(`${config.spring.url}/articulo/update/precios`, arts);
 
         // if (sync.status === 200) {
         //     articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
@@ -126,3 +127,38 @@ exports.precios = async (req, res, next) => {
     }
 };
 
+exports.pendiente = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        const pedidos = await Pedido.find({ estado: { $ne: 'completo' } })
+            .populate('items.articulo', 'id codigo descripcion kilos');
+
+        const articulos = {};
+
+        pedidos.map((pedido) => {
+            pedido.items.map((item) => {
+                if (articulos[item.articulo._id]) {
+                    const pendiente = articulos[item.articulo._id].cantidad + item.pendiente;
+
+                    articulos[item.articulo._id].cantidad = pendiente;
+                } else {
+                    articulos[item.articulo._id] = {
+                        codigo: item.articulo.codigo,
+                        descripcion: item.articulo.descripcion,
+                        cantidad: item.pendiente
+                    }
+                }
+            });
+        })
+
+        res.send(articulos);
+    } catch (err) {
+        console.log(err);
+
+        const error = new Error('Ha ocurrido un error');
+        error.status = 500;
+
+        next(error);
+    }
+};

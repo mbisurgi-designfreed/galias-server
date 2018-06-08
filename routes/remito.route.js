@@ -10,4 +10,6 @@ module.exports = (app) => {
     app.get('/api/remito/today', RemitoController.listToday);
 
     app.post('/api/remito/new', RemitoController.insert);
+    
+    app.post('/api/remito/sync', RemitoController.sync);
 };
