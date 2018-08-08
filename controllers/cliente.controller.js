@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 const config = require('../config/config');
+const pusher = require('../config/pusher/pusher');
 const Cliente = require('../models/cliente.model');
 const Pedido = require('../models/pedido.model');
 
@@ -64,7 +65,17 @@ exports.insert = async (req, res, next) => {
     try {
         let cliente = await new Cliente(req.body).save();
 
-        // const sync = await axios.post(`${config.spring.url}/cliente/new`, cliente);
+        axios.post(`${config.spring.url}/cliente/new`, cliente)
+            .then((response) => {
+                if (response.data === '') {
+                    pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
+                } else {
+                    pusher.trigger('crm', 'cliente', { cliente: cliente.codigo });
+                }
+            })
+            .catch((err) => {
+                pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
+            });
 
         // if (sync.status === 200) {
         //     cliente = await Cliente.findByIdAndUpdate(cliente._id, { sincronizado: true }, { new: true });
@@ -97,13 +108,17 @@ exports.update = async (req, res, next) => {
 
         let cliente = await Cliente.findByIdAndUpdate(id, { ...req.body, sincronizado: false }, { new: true });
 
-        // const sync = await axios.patch(`${config.spring.url}/cliente/update`, cliente);
-
-        // if (sync.status === 204) {
-        //     cliente = await Cliente.findByIdAndUpdate(cliente._id, { sincronizado: true }, { new: true });
-        // } else {
-        //     cliente = await Cliente.findByIdAndUpdate(cliente._id, { sincronizado: false }, { new: true });
-        // }
+        axios.patch(`${config.spring.url}/cliente/update`, cliente)
+            .then((response) => {
+                if (response.data === '') {
+                    pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
+                } else {
+                    pusher.trigger('crm', 'cliente', { cliente: cliente.codigo });
+                }
+            })
+            .catch((err) => {
+                pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
+            });
 
         res.status(201).send(cliente);
     } catch (err) {

@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 const config = require('../config/config');
+const pusher = require('../config/pusher/pusher');
 const Articulo = require('../models/articulo.model');
 const Pedido = require('../models/pedido.model');
 
@@ -23,9 +24,20 @@ exports.insert = async (req, res, next) => {
     try {
         let articulo = await new Articulo(req.body).save();
 
-        // const art = await Articulo.findById(articulo.id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
+        const art = await Articulo.findById(articulo.id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
 
-        // const sync = await axios.post(`${config.spring.url}/articulo/new`, art);
+        axios.post(`${config.spring.url}/articulo/new`, art)
+            .then((response) => {
+                if (response.data === '') {
+                    pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
+                } else {
+                    pusher.trigger('crm', 'articulo', { articulo: articulo.codigo });                    
+                }
+
+            })
+            .catch((err) => {                
+                pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
+            });
 
         // if (sync.status === 200) {
         //     articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
@@ -58,9 +70,22 @@ exports.update = async (req, res, next) => {
 
         let articulo = await Articulo.findByIdAndUpdateWithPrecio(id, { ...req.body, sincronizado: false });
 
-        // const art = await Articulo.findById(articulo.id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
+        const art = await Articulo.findById(articulo.id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
 
-        // const sync = await axios.patch(`${config.spring.url}/articulo/update`, art);
+        axios.patch(`${config.spring.url}/articulo/update`, art)
+            .then((response) => {
+                console.log(response.data);
+                if (response.data === '') {
+                    pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
+                } else {
+                    pusher.trigger('crm', 'articulo', { articulo: articulo.codigo });                    
+                }
+
+            })
+            .catch((err) => {
+                console.log(err);
+                pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
+            });
 
         // if (sync.status === 200) {
         //     articulo = await Articulo.findByIdAn

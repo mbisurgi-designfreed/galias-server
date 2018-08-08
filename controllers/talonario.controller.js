@@ -24,7 +24,7 @@ exports.insert = async (req, res) => {
 
 exports.proximo = async (req, res) => {
     try {
-        const talonario = await Talonario.findOne({ habilitado: true });
+        const talonario = await Talonario.findOne({ pv: 10 });
 
         res.send(talonario);
     } catch (err) {

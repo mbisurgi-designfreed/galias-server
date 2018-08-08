@@ -7,6 +7,10 @@ const TalonarioSchema = new Schema({
         type: String,
         required: true
     },
+    pv: {
+        type: Number,
+        required: true
+    },
     desde: {
         type: Number,
         required: true

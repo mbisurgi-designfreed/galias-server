@@ -76,11 +76,18 @@ exports.insert = async (req, res) => {
 
 exports.sync = async (req, res) => {
     try {
-        const talonario = await Talonario.findOne({ habilitado: true });
+        const talonario = await Talonario.findOne({ pv: 10 });
 
-        let remito = await new Remito({ ...req.body.remito, numero: generarNroRemito(req.body.proximo) });
+        //let remito = await new Remito({ ...req.body, numero: generarNroRemito(talonario.proximo) });
 
-        const sync = await axios.post(`${config.spring.url}/remito/new`, remito);
+        let remito = transform(req.body);
+        console.log(remito);
+
+        const sync = await axios.post(`${config.spring.url}/remito/new`, remito, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
 
         if (sync.status === 200) {
             res.send(remito);
@@ -94,5 +101,12 @@ exports.sync = async (req, res) => {
 };
 
 function generarNroRemito(numero) {
-    return `R0002${numero.toString().padStart(8, '0')}`;
+    return `R0010${numero.toString().padStart(8, '0')}`;
+}
+
+function transform(remito) {
+    let newRemito = {};
+    newRemito.fecha = remito.fecha;
+    newRemito.cliente = remito.cliente._id;
+    newRemito.items = remito.items;
 }
