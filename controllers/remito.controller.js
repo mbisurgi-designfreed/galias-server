@@ -39,14 +39,12 @@ exports.listToday = async (req, res) => {
 
 exports.insert = async (req, res) => {
     try {
-        const talonario = await Talonario.findOne({ habilitado: true });
-
-        let remito = await new Remito({ ...req.body.remito, numero: generarNroRemito(req.body.proximo) }).save();
+        const remito = await new Remito(req.body.remito).save();
 
         if (remito) {
             const proximo = req.body.proximo + 1;
 
-            await Talonario.findByIdAndUpdate(talonario.id, { $set: { proximo } });
+            await Talonario.findOneAndUpdate({ pv: req.body.pv }, { $set: { proximo } }, { new: true });
 
             const pedido = await Pedido.findById(remito.pedido);
 
@@ -82,7 +80,7 @@ exports.sync = async (req, res) => {
         await axios.post(`${config.spring.url}/remito/new`, transform(req.body))
             .then((response) => {
                 if (response.data === true) {
-                    Pedido.findByIdAndUpdate(pedidoId, { sincronizado: true }).then((res) => {});
+                    Pedido.findByIdAndUpdate(pedidoId, { sincronizado: true }).then((res) => { });
                     pusher.trigger('crm', 'remito', { pedido: pedidoId });
                 } else {
                     pusher.trigger('crm', 'remito.error', { pedido: pedidoId });
@@ -97,10 +95,6 @@ exports.sync = async (req, res) => {
         res.status(422).send({ err });
     }
 };
-
-function generarNroRemito(numero) {
-    return `R0010${numero.toString().padStart(8, '0')}`;
-}
 
 function transform(remito) {
     return {
