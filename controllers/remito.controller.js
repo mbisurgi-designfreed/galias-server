@@ -3,6 +3,7 @@ const moment = require('moment');
 const _ = require('lodash');
 
 const config = require('../config/config');
+const pusher = require('../config/pusher/pusher');
 const Remito = require('../models/remito.model');
 const Pedido = require('../models/pedido.model');
 const Talonario = require('../models/talonario.model');
@@ -76,26 +77,23 @@ exports.insert = async (req, res) => {
 
 exports.sync = async (req, res) => {
     try {
-        const talonario = await Talonario.findOne({ pv: 10 });
+        const pedidoId = req.body.pedido;
 
-        //let remito = await new Remito({ ...req.body, numero: generarNroRemito(talonario.proximo) });
+        await axios.post(`${config.spring.url}/remito/new`, transform(req.body))
+            .then((response) => {
+                if (response.data === true) {
+                    Pedido.findByIdAndUpdate(pedidoId, { sincronizado: true }).then((res) => {});
+                    pusher.trigger('crm', 'remito', { pedido: pedidoId });
+                } else {
+                    pusher.trigger('crm', 'remito.error', { pedido: pedidoId });
+                }
+            })
+            .catch((err) => {
+                pusher.trigger('crm', 'remito.error', { pedido: pedidoId });
+            });
 
-        let remito = transform(req.body);
-        console.log(remito);
-
-        const sync = await axios.post(`${config.spring.url}/remito/new`, remito, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
-
-        if (sync.status === 200) {
-            res.send(remito);
-        }
-
-        res.send(remito);
+        res.send();
     } catch (err) {
-        console.log(err);
         res.status(422).send({ err });
     }
 };
@@ -105,8 +103,9 @@ function generarNroRemito(numero) {
 }
 
 function transform(remito) {
-    let newRemito = {};
-    newRemito.fecha = remito.fecha;
-    newRemito.cliente = remito.cliente._id;
-    newRemito.items = remito.items;
+    return {
+        fecha: remito.fecha,
+        cliente: remito.cliente,
+        items: remito.items
+    }
 }

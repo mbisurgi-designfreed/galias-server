@@ -97,6 +97,11 @@ const PedidoSchema = new Schema({
         type: String,
         default: 'generado',
         enum: ESTADOS
+    },
+    sincronizado: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 });
 

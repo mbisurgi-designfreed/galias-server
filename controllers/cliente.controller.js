@@ -70,16 +70,13 @@ exports.insert = async (req, res, next) => {
                 if (response.data === '') {
                     pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
                 } else {
+                    Cliente.findByIdAndUpdate(cliente._id, { sincronizado: true }).then((res) => {});
                     pusher.trigger('crm', 'cliente', { cliente: cliente.codigo });
                 }
             })
             .catch((err) => {
                 pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
             });
-
-        // if (sync.status === 200) {
-        //     cliente = await Cliente.findByIdAndUpdate(cliente._id, { sincronizado: true }, { new: true });
-        // }
 
         res.status(201).send(cliente);
     } catch (err) {
@@ -106,17 +103,20 @@ exports.update = async (req, res, next) => {
     try {
         const id = req.params.id;
 
-        let cliente = await Cliente.findByIdAndUpdate(id, { ...req.body, sincronizado: false }, { new: true });
+        const cliente = await Cliente.findByIdAndUpdate(id, { ...req.body, sincronizado: false }, { new: true });
 
         axios.patch(`${config.spring.url}/cliente/update`, cliente)
             .then((response) => {
                 if (response.data === '') {
+                    Cliente.findByIdAndUpdate(id, { sincronizado: false }).then((res) => {});
                     pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
                 } else {
+                    Cliente.findByIdAndUpdate(id, { sincronizado: true }).then((res) => {});
                     pusher.trigger('crm', 'cliente', { cliente: cliente.codigo });
                 }
             })
             .catch((err) => {
+                Cliente.findByIdAndUpdate(id, { sincronizado: false }).then((res) => {});
                 pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
             });
 
