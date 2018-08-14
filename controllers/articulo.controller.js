@@ -31,7 +31,7 @@ exports.insert = async (req, res, next) => {
                 if (response.data === '') {
                     pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
                 } else {
-                    Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }).then((res) => {});
+                    Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }).then((res) => { });
                     pusher.trigger('crm', 'articulo', { articulo: articulo.codigo });
                 }
 
@@ -72,16 +72,16 @@ exports.update = async (req, res, next) => {
         axios.patch(`${config.spring.url}/articulo/update`, articulo)
             .then((response) => {
                 if (response.data === '') {
-                    Articulo.findByIdAndUpdate(id, { sincronizado: false }).then((res) => {});
+                    Articulo.findByIdAndUpdate(id, { sincronizado: false }).then((res) => { });
                     pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
                 } else {
-                    Articulo.findByIdAndUpdate(id, { sincronizado: true }).then((res) => {});
+                    Articulo.findByIdAndUpdate(id, { sincronizado: true }).then((res) => { });
                     pusher.trigger('crm', 'articulo', { articulo: articulo.codigo });
                 }
 
             })
             .catch((err) => {
-                Articulo.findByIdAndUpdate(id, { sincronizado: false }).then((res) => {});
+                Articulo.findByIdAndUpdate(id, { sincronizado: false }).then((res) => { });
                 pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
             });
 
@@ -108,19 +108,28 @@ exports.update = async (req, res, next) => {
 
 exports.precios = async (req, res, next) => {
     try {
-        const articulos = await Promise.all(req.body.map(async (articulo) => {
-            return await Articulo.findByIdAndUpdateWithPrecio(articulo._id, { ...articulo, sincronizado: false });
+        let articulos = await Promise.all(req.body.map(async (articulo) => {
+            return await Articulo.findByIdAndUpdateWithPrecio(articulo._id, { ...articulo, sincronizado: false }, { new: true });
         }));
 
-        const arts = await Articulo.find().populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
+        articulos = await Articulo.find().populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
 
-        const sync = await axios.patch(`${config.spring.url}/articulo/update/precios`, arts);
+        //const sync = await axios.patch(`${config.spring.url}/articulo/update/precios`, arts);
 
-        // if (sync.status === 200) {
-        //     articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }, { new: true });
-        // } else {
-        //     articulo = await Articulo.findByIdAndUpdate(articulo._id, { sincronizado: false }, { new: true });
-        // }
+        axios.patch(`${config.spring.url}/articulo/update/precios`, articulos)
+            .then((response) => {
+                if (response.data === false) {
+                    pusher.trigger('crm', 'precio.error', { });
+                } else {
+                    articulos.map((articulo) => {
+                        Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }).then((res) => {});
+                    });
+                    pusher.trigger('crm', 'precio', { });
+                }
+            })
+            .catch((err) => {
+                pusher.trigger('crm', 'precio.error', { });
+            });
 
         res.status(201).send(articulos);
     } catch (err) {
