@@ -98,6 +98,10 @@ const PedidoSchema = new Schema({
         default: 'generado',
         enum: ESTADOS
     },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'user'
+    },
     sincronizado: {
         type: Boolean,
         required: true,

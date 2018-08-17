@@ -66,7 +66,7 @@ exports.insert = async (req, res) => {
             return item;
         });
 
-        const pedido = await new Pedido(req.body).save();
+        const pedido = await new Pedido({ ...req.body, user: req.user }).save();
 
         pusher.trigger('crm', 'pedido', { pedido: pedido._id, cliente: req.body.cliente.razonSocial });
 

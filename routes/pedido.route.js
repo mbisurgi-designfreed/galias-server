@@ -11,5 +11,5 @@ module.exports = (app) => {
         
     app.get('/api/pedido/pendiente/:cliente', PedidoController.pendienteCliente);
 
-    app.post('/api/pedido/new', PedidoController.insert);
+    app.post('/api/pedido/new', jwtAuth, PedidoController.insert);
 };
