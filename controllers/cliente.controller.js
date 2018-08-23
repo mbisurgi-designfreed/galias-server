@@ -65,18 +65,20 @@ exports.insert = async (req, res, next) => {
     try {
         let cliente = await new Cliente(req.body).save();
 
-        axios.post(`${config.spring.url}/cliente/new`, cliente)
-            .then((response) => {
-                if (response.data === '') {
+        if (config.spring.clientes) {
+            axios.post(`${config.spring.url}/cliente/new`, cliente)
+                .then((response) => {
+                    if (response.data === '') {
+                        pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
+                    } else {
+                        Cliente.findByIdAndUpdate(cliente._id, { sincronizado: true }).then((res) => { });
+                        pusher.trigger('crm', 'cliente', { cliente: cliente.codigo });
+                    }
+                })
+                .catch((err) => {
                     pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
-                } else {
-                    Cliente.findByIdAndUpdate(cliente._id, { sincronizado: true }).then((res) => {});
-                    pusher.trigger('crm', 'cliente', { cliente: cliente.codigo });
-                }
-            })
-            .catch((err) => {
-                pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
-            });
+                });
+        }
 
         res.status(201).send(cliente);
     } catch (err) {
@@ -105,20 +107,22 @@ exports.update = async (req, res, next) => {
 
         const cliente = await Cliente.findByIdAndUpdate(id, { ...req.body, sincronizado: false }, { new: true });
 
-        axios.patch(`${config.spring.url}/cliente/update`, cliente)
-            .then((response) => {
-                if (response.data === '') {
-                    Cliente.findByIdAndUpdate(id, { sincronizado: false }).then((res) => {});
+        if (config.spring.clientes) {
+            axios.patch(`${config.spring.url}/cliente/update`, cliente)
+                .then((response) => {
+                    if (response.data === '') {
+                        Cliente.findByIdAndUpdate(id, { sincronizado: false }).then((res) => { });
+                        pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
+                    } else {
+                        Cliente.findByIdAndUpdate(id, { sincronizado: true }).then((res) => { });
+                        pusher.trigger('crm', 'cliente', { cliente: cliente.codigo });
+                    }
+                })
+                .catch((err) => {
+                    Cliente.findByIdAndUpdate(id, { sincronizado: false }).then((res) => { });
                     pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
-                } else {
-                    Cliente.findByIdAndUpdate(id, { sincronizado: true }).then((res) => {});
-                    pusher.trigger('crm', 'cliente', { cliente: cliente.codigo });
-                }
-            })
-            .catch((err) => {
-                Cliente.findByIdAndUpdate(id, { sincronizado: false }).then((res) => {});
-                pusher.trigger('crm', 'cliente.error', { cliente: cliente.codigo });
-            });
+                });
+        }
 
         res.status(201).send(cliente);
     } catch (err) {

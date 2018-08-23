@@ -26,19 +26,21 @@ exports.insert = async (req, res, next) => {
 
         articulo = await Articulo.findById(articulo.id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
 
-        axios.post(`${config.spring.url}/articulo/new`, articulo)
-            .then((response) => {
-                if (response.data === '') {
-                    pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
-                } else {
-                    Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }).then((res) => { });
-                    pusher.trigger('crm', 'articulo', { articulo: articulo.codigo });
-                }
+        if (config.spring.articulos) {
+            axios.post(`${config.spring.url}/articulo/new`, articulo)
+                .then((response) => {
+                    if (response.data === '') {
+                        pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
+                    } else {
+                        Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }).then((res) => { });
+                        pusher.trigger('crm', 'articulo', { articulo: articulo.codigo });
+                    }
 
-            })
-            .catch((err) => {
-                pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
-            });
+                })
+                .catch((err) => {
+                    pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
+                });
+        }
 
         res.status(201).send(articulo);
     } catch (err) {
@@ -69,21 +71,23 @@ exports.update = async (req, res, next) => {
 
         articulo = await Articulo.findById(id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
 
-        axios.patch(`${config.spring.url}/articulo/update`, articulo)
-            .then((response) => {
-                if (response.data === '') {
+        if (config.spring.articulos) {
+            axios.patch(`${config.spring.url}/articulo/update`, articulo)
+                .then((response) => {
+                    if (response.data === '') {
+                        Articulo.findByIdAndUpdate(id, { sincronizado: false }).then((res) => { });
+                        pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
+                    } else {
+                        Articulo.findByIdAndUpdate(id, { sincronizado: true }).then((res) => { });
+                        pusher.trigger('crm', 'articulo', { articulo: articulo.codigo });
+                    }
+
+                })
+                .catch((err) => {
                     Articulo.findByIdAndUpdate(id, { sincronizado: false }).then((res) => { });
                     pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
-                } else {
-                    Articulo.findByIdAndUpdate(id, { sincronizado: true }).then((res) => { });
-                    pusher.trigger('crm', 'articulo', { articulo: articulo.codigo });
-                }
-
-            })
-            .catch((err) => {
-                Articulo.findByIdAndUpdate(id, { sincronizado: false }).then((res) => { });
-                pusher.trigger('crm', 'articulo.error', { articulo: articulo.codigo });
-            });
+                });
+        }
 
         res.status(201).send(articulo);
     } catch (err) {
@@ -119,16 +123,16 @@ exports.precios = async (req, res, next) => {
         axios.patch(`${config.spring.url}/articulo/update/precios`, articulos)
             .then((response) => {
                 if (response.data === false) {
-                    pusher.trigger('crm', 'precio.error', { });
+                    pusher.trigger('crm', 'precio.error', {});
                 } else {
                     articulos.map((articulo) => {
-                        Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }).then((res) => {});
+                        Articulo.findByIdAndUpdate(articulo._id, { sincronizado: true }).then((res) => { });
                     });
-                    pusher.trigger('crm', 'precio', { });
+                    pusher.trigger('crm', 'precio', {});
                 }
             })
             .catch((err) => {
-                pusher.trigger('crm', 'precio.error', { });
+                pusher.trigger('crm', 'precio.error', {});
             });
 
         res.status(201).send(articulos);

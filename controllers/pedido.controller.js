@@ -74,7 +74,7 @@ exports.insert = async (req, res) => {
             from: 'pedidos@galia.com.ar',
             to: 'pedidos@galia.com.ar',
             subject: `Nuevo pedido - ${req.body.cliente.razonSocial}`,
-            text: `Se ha generado un nuevo pedido con numero ${pedido._id}. Para verlo ingrese a http://localhost:8080/pedidos/`
+            text: `Se ha generado un nuevo pedido con numero ${pedido._id}. Para verlo ingrese a http://galias-app-web.herokuapp.com/pedidos/`
         };
 
         email.sendMail(mail);

@@ -17,6 +17,8 @@ module.exports = {
         encrypted: true
     },
     spring: {
-        url: process.env.SPRING_URL
+        url: process.env.SPRING_URL,
+        clientes: process.env.SPRING_CLIENTES,
+        articulos: process.env.SPRING_ARTICULOS
     }
 }
