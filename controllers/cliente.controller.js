@@ -65,7 +65,7 @@ exports.insert = async (req, res, next) => {
     try {
         let cliente = await new Cliente(req.body).save();
 
-        if (config.spring.clientes) {
+        if (config.spring.clientes === 'true') {
             axios.post(`${config.spring.url}/cliente/new`, cliente)
                 .then((response) => {
                     if (response.data === '') {
@@ -107,7 +107,7 @@ exports.update = async (req, res, next) => {
 
         const cliente = await Cliente.findByIdAndUpdate(id, { ...req.body, sincronizado: false }, { new: true });
 
-        if (config.spring.clientes) {
+        if (config.spring.clientes === 'true') {
             axios.patch(`${config.spring.url}/cliente/update`, cliente)
                 .then((response) => {
                     if (response.data === '') {

@@ -26,7 +26,7 @@ exports.insert = async (req, res, next) => {
 
         articulo = await Articulo.findById(articulo.id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
 
-        if (config.spring.articulos) {
+        if (config.spring.articulos === 'true') {
             axios.post(`${config.spring.url}/articulo/new`, articulo)
                 .then((response) => {
                     if (response.data === '') {
@@ -71,7 +71,7 @@ exports.update = async (req, res, next) => {
 
         articulo = await Articulo.findById(id).populate('unidadStock').populate('unidadesCpa.unidad').populate('unidadesVta.unidad');
 
-        if (config.spring.articulos) {
+        if (config.spring.articulos === 'true') {
             axios.patch(`${config.spring.url}/articulo/update`, articulo)
                 .then((response) => {
                     if (response.data === '') {
