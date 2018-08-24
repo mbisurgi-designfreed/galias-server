@@ -23,7 +23,8 @@ exports.list = async (req, res) => {
 };
 
 exports.listToday = async (req, res) => {
-    const today = moment(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+    const today = moment(moment(new Date()).format('YYYY-MM-DD')).hours(0).minutes(0).seconds(0).milliseconds(0).valueOf();
+    console.log(today);
 
     try {
         const pedidos = await Pedido.find({ fecha: today })
