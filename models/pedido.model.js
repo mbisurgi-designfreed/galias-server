@@ -4,7 +4,7 @@ const _ = require('lodash');
 const Schema = mongoose.Schema;
 
 const PROMOCIONES = ['a+b', '%', 'sin'];
-const ESTADOS = ['generado', 'pendiente', 'completo'];
+const ESTADOS = ['generado', 'pendiente', 'completo', 'anulado'];
 
 const LocationSchema = new Schema({
     type: { type: String, default: 'Point' },

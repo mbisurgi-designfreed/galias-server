@@ -23,8 +23,7 @@ exports.list = async (req, res) => {
 };
 
 exports.listToday = async (req, res) => {
-    const today = moment(moment(new Date()).format('YYYY-MM-DD')).hours(0).minutes(0).seconds(0).milliseconds(0).valueOf();
-    console.log(today);
+    const today = moment(moment(new Date()).format('YYYY-MM-DD')).valueOf();
 
     try {
         const pedidos = await Pedido.find({ fecha: today })
@@ -81,6 +80,18 @@ exports.insert = async (req, res) => {
         email.sendMail(mail);
 
         res.send(pedido);
+    } catch (err) {
+        res.status(422).send({ err });
+    }
+};
+
+exports.anular = async (req, res, next) => {
+    try {
+        const id = req.body.id;
+
+        const pedido = await Pedido.findByIdAndUpdate(id, { estado: 'anulado' }, { new: true });
+
+        res.status(201).send(pedido);
     } catch (err) {
         res.status(422).send({ err });
     }
