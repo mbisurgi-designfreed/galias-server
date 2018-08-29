@@ -11,6 +11,19 @@ exports.list = async (req, res) => {
     }
 }
 
+exports.listByTipo = async (req, res) => {
+    try {
+        const tipo = req.params.tipo;
+
+        const talonarios = await Talonario.find({ tipo });
+
+        res.send(talonarios);
+    } catch (err) {
+        console.log(err);
+        res.status(422).send({ err });
+    }
+}
+
 exports.insert = async (req, res) => {
     try {
         const talonario = await new Talonario(req.body).save();

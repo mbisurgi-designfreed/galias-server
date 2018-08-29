@@ -7,6 +7,8 @@ module.exports = (app) => {
 
     app.get('/api/talonario/list', TalonarioController.list);
 
+    app.get('/api/talonario/list/:tipo', TalonarioController.listByTipo);
+
     app.post('/api/talonario/new', TalonarioController.insert);
     
     app.get('/api/talonario/proximo', TalonarioController.proximo);

@@ -24,6 +24,10 @@ const EntregaSchema = new Schema({
         type: Number,
         required: true
     },
+    comprobante: {
+        type: String,
+        required: true
+    },
     items: {
         type: [ItemSchema],
         required: true

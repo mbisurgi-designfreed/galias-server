@@ -1,6 +1,7 @@
 const config = require('../config/config');
 const Remito = require('../models/remito.model');
 const Entrega = require('../models/entrega.model');
+const Talonario = require('../models/talonario.model');
 
 // exports.list = async (req, res) => {
 //     const desde = req.query.desde;
@@ -33,9 +34,13 @@ const Entrega = require('../models/entrega.model');
 
 exports.insert = async (req, res) => {
     try {
-        const entrega = await new Entrega(req.body).save();
+        const entrega = await new Entrega(req.body.entrega).save();
 
         if (entrega) {
+            const proximo = req.body.talonario.proximo + 1;
+
+            await Talonario.findOneAndUpdate({ _id: req.body.talonario._id }, { $set: { proximo } }, { new: true });
+
             await Promise.all(entrega.remitos.map(async (remito) => {
                 await Remito.findByIdAndUpdate(remito, { estado: 'entregado' });
             }));

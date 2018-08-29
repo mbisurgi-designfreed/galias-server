@@ -2,10 +2,17 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
+const TIPOS = ['remito', 'entrega'];
+
 const TalonarioSchema = new Schema({
     descripcion: {
         type: String,
         required: true
+    },
+    tipo: {
+        type: String,
+        required: true,
+        enum: TIPOS
     },
     pv: {
         type: Number,
@@ -21,10 +28,6 @@ const TalonarioSchema = new Schema({
     },
     proximo: {
         type: Number,
-        required: true
-    },
-    tango: {
-        type: Boolean,
         required: true
     },
     habilitado: {
