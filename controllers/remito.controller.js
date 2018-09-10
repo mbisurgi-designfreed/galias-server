@@ -44,7 +44,7 @@ exports.insert = async (req, res) => {
         if (remito) {
             const proximo = req.body.proximo + 1;
 
-            await Talonario.findOneAndUpdate({ pv: req.body.pv }, { $set: { proximo } }, { new: true });
+            await Talonario.findOneAndUpdate({ pv: req.body.pv, tipo: 'remito' }, { $set: { proximo } }, { new: true });
 
             const pedido = await Pedido.findById(remito.pedido);
 
