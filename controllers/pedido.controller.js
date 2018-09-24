@@ -66,9 +66,12 @@ exports.insert = async (req, res) => {
             return item;
         });
 
-        const pedido = await new Pedido({ ...req.body, user: req.user }).save();
+        let pedido = await new Pedido({ ...req.body, user: req.user }).save();
+        pedido = await Pedido.findById(pedido._id)
+            .populate('cliente', 'id codigo razonSocial')
+            .populate('items.articulo', 'id codigo descripcion');
 
-        pusher.trigger('crm', 'pedido', { pedido: pedido._id, cliente: req.body.cliente.razonSocial });
+        pusher.trigger('crm', 'pedido', { pedido: pedido, cliente: req.body.cliente.razonSocial });
 
         const mail = {
             from: 'pedidos@galia.com.ar',

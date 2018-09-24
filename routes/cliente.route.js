@@ -8,6 +8,7 @@ module.exports = (app) => {
     app.get('/api/cliente/id/:id', ClienteController.getById);
     app.get('/api/cliente/codigo/:codigo', ClienteController.getByCodigo);
     app.get('/api/cliente/list', ClienteController.getClientes);
+    app.get('/api/cliente/excel', ClienteController.listExcel);
     app.post('/api/cliente/new', ClienteController.insert);
     app.put('/api/cliente/:id', ClienteController.update);
 

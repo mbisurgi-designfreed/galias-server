@@ -61,6 +61,23 @@ exports.getClientes = async (req, res, next) => {
     }
 };
 
+exports.listExcel = async (req, res, next) => {
+    try {
+        const clientes = await Cliente.find()
+            .populate('canal')
+            .populate('subcanal');
+
+        res.status(200).send(clientes);
+    } catch (err) {
+        console.log(err);
+
+        const error = new Error('Ha ocurrido un error');
+        error.status = 500;
+
+        next(error);
+    }
+};
+
 exports.insert = async (req, res, next) => {
     try {
         let cliente = await new Cliente(req.body).save();

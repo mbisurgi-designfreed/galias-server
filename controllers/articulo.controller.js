@@ -20,6 +20,26 @@ exports.list = async (req, res, next) => {
     }
 };
 
+exports.listExcel = async (req, res, next) => {
+    try {
+        const articulos = await Articulo.find()
+            .populate('familia')
+            .populate('grupo')
+            .populate('subgrupo')
+            .populate('unidadesCpa.unidad')
+            .populate('unidadesVta.unidad')
+
+        res.status(201).send(articulos);
+    } catch (err) {
+        console.log(err);
+
+        const error = new Error('Ha ocurrido un error');
+        error.status = 500;
+
+        next(error);
+    }
+};
+
 exports.insert = async (req, res, next) => {
     try {
         let articulo = await new Articulo(req.body).save();

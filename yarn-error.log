@@ -1,0 +1,80 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.5.1_1/libexec/bin/yarn.js add @types/mongoose --dev
+
+PATH: 
+  /Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/mysql/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/mysql/bin
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  8.12.0
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "server",
+    "version": "1.0.0",
+    "description": "Server para aplicacion integral Galias SRL",
+    "main": "index.js",
+    "engines": {
+      "node": "8.9.4",
+      "npm": "5.6.0"
+    },
+    "scripts": {
+      "start": "node index",
+      "server:dev": "nodemon index",
+      "test": "export NODE_ENV=test && jest --config=jest.config.json"
+    },
+    "author": "Design Freed",
+    "license": "ISC",
+    "dependencies": {
+      "axios": "^0.18.0",
+      "babel-cli": "^6.26.0",
+      "babel-core": "^6.26.0",
+      "babel-plugin-transform-object-rest-spread": "^6.26.0",
+      "babel-preset-env": "^1.6.1",
+      "bcrypt-nodejs": "0.0.3",
+      "body-parser": "^1.18.2",
+      "cors": "^2.8.4",
+      "express": "4.16.2",
+      "jwt-simple": "^0.5.1",
+      "lodash": "^4.17.4",
+      "moment": "^2.19.1",
+      "mongoose": "^4.12.4",
+      "nodemailer": "^4.6.3",
+      "passport": "^0.4.0",
+      "passport-jwt": "^3.0.1",
+      "passport-local": "^1.0.0",
+      "pusher": "^1.5.1",
+      "socket.io": "^1.7.2",
+      "twilio": "^3.9.3"
+    },
+    "devDependencies": {
+      "expect": "1.20.2",
+      "jest": "20.0.4",
+      "nodemon": "^1.15.1",
+      "supertest": "^3.0.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: Found incompatible module
+      at new MessageError (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:186:110)
+      at Object.checkOne (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:62444:11)
+      at /usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:22773:75
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:98:30)
+      at /usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:116:14
+      at new Promise (<anonymous>)
+      at new F (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:23451:28)
+      at /usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:95:12
+      at /usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:22777:27
