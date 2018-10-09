@@ -14,4 +14,6 @@ module.exports = (app) => {
     app.post('/api/pedido/new', jwtAuth, PedidoController.insert);
     
     app.post('/api/pedido/anular', PedidoController.anular);
+
+    app.post('/api/pedido/item/eliminar', PedidoController.eliminarItem);
 };

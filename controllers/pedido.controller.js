@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
+const _ = require('lodash');
 
 const email = require('../config/email/email');
 const pusher = require('../config/pusher/pusher');
@@ -93,6 +94,32 @@ exports.anular = async (req, res, next) => {
         const id = req.body.id;
 
         const pedido = await Pedido.findByIdAndUpdate(id, { estado: 'anulado' }, { new: true });
+
+        res.status(201).send(pedido);
+    } catch (err) {
+        res.status(422).send({ err });
+    }
+};
+
+exports.eliminarItem = async (req, res, next) => {
+    try {
+        const pedidoId = req.body.pedidoId;
+        const itemId = req.body.itemId;
+
+        const pedido = await Pedido.findById(pedidoId);
+        _.remove(pedido.items, item => item._id.toString() === itemId);
+
+        const total = _.reduce(pedido.items, (sum, item) => {
+            const sub = item.cantidad * item.precio;
+
+            return sum + sub;
+        }, 0);
+
+        if (pedido.items.length > 0) {
+            await Pedido.findByIdAndUpdate(pedidoId, { items: pedido.items, total });
+        } else {
+            await Pedido.findByIdAndUpdate(pedidoId, { items: pedido.items, total, estado: 'anulado' })
+        }
 
         res.status(201).send(pedido);
     } catch (err) {
