@@ -29,6 +29,7 @@ require('./routes/pedido.route')(app);
 require('./routes/remito.route')(app);
 require('./routes/entrega.route')(app);
 require('./routes/talonario.route')(app);
+require('./routes/location.route')(app);
 
 app.use((err, req, res, next) => {
     const status = err.status || 500;
