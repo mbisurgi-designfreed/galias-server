@@ -103,6 +103,19 @@ exports.anular = async (req, res, next) => {
     }
 };
 
+exports.anularAll = async (req, res, next) => {
+    try {
+        const ids = req.body.map(pedido => pedido._id);
+
+        //const pedido = await Pedido.findByIdAndUpdate(id, { estado: 'anulado' }, { new: true });
+        const pedidos = await Pedido.updateMany({ _id: { $in: ids } }, { estado: 'anulado' });
+
+        res.status(201).send(pedidos);
+    } catch (err) {
+        res.status(422).send({ err });
+    }
+};
+
 exports.eliminarItem = async (req, res, next) => {
     try {
         const pedidoId = req.body.pedidoId;
