@@ -12,4 +12,6 @@ module.exports = (app) => {
     app.post('/api/remito/new', RemitoController.insert);
     
     app.post('/api/remito/sync', RemitoController.sync);
+
+    app.post('/api/remito/syncAll', RemitoController.syncAll);
 };

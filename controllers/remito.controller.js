@@ -96,10 +96,49 @@ exports.sync = async (req, res) => {
     }
 };
 
+exports.syncAll = async (req, res) => {
+    try {
+        //const pedidos = await Pedido.find({ _id: { $in: getPedidos(req.body) } });
+        await axios.post(`${config.spring.url}/remito/syncAll`, transformAll(req.body))
+            .then((response) => {
+                if (response.status === 200) {
+                    if (response.data.sincronizados.length > 0) {
+                        Pedido.updateMany({ _id: { $in: response.data.sincronizados } }, { sincronizado: true }).then(res => { });
+                        pusher.trigger('crm', 'remitos', { pedidos: response.data.sincronizados });
+                    }
+
+                    if (response.data.errores.length > 0) {
+                        pusher.trigger('crm', 'remitos.error', { pedidos: response.data.errores });
+                    }
+                    // Pedido.findByIdAndUpdate(pedidoId, { sincronizado: true }).then((res) => { });
+                    // pusher.trigger('crm', 'remito', { pedido: pedidoId });
+                } else {
+                    pusher.trigger('crm', 'remito.error', { pedido: pedidoId });
+                }
+            })
+            .catch((err) => {
+                pusher.trigger('crm', 'remito.error', { pedido: pedidoId });
+            });
+
+        res.send();
+    } catch (err) {
+        res.status(422).send({ err });
+    }
+};
+
 function transform(remito) {
     return {
         fecha: remito.fecha,
+        pedido: remito.pedido,
         cliente: remito.cliente,
         items: remito.items
     }
+}
+
+function transformAll(remitos) {
+    return remitos.map(remito => transform(remito));
+}
+
+function getPedidos(remitos) {
+    return remitos.map(remito => remito.pedido);
 }
