@@ -13,6 +13,8 @@ module.exports = (app) => {
 
     app.post('/api/pedido/new', jwtAuth, PedidoController.insert);
     
+    app.post('/api/pedido/editar', PedidoController.editar);
+
     app.post('/api/pedido/anular', PedidoController.anular);
 
     app.post('/api/pedido/anularAll', PedidoController.anularAll);

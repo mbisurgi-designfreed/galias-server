@@ -91,6 +91,24 @@ exports.insert = async (req, res) => {
     }
 };
 
+exports.editar = async (req, res, next) => {
+    try {
+        const id = req.body._id;
+
+        req.body.total = _.reduce(req.body.items, (sum, item) => {
+            const sub = item.cantidad * item.precio;
+    
+            return sum + sub;
+        }, 0);
+
+        const pedido = await Pedido.findByIdAndUpdate(id, { ...req.body }, { new: true });
+
+        res.status(201).send(pedido);
+    } catch (err) {
+        res.status(422).send({ err });
+    }
+};
+
 exports.anular = async (req, res, next) => {
     try {
         const id = req.body.id;
