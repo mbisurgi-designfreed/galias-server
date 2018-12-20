@@ -110,6 +110,10 @@ exports.syncAll = async (req, res) => {
                     if (response.data.errores.length > 0) {
                         pusher.trigger('crm', 'remitos.error', { pedidos: response.data.errores });
                     }
+
+                    if (!_.isEmpty(response.data.advertencias)) {
+                        pusher.trigger('crm', 'remitos.advertencias', { pedidos: response.data.advertencias });
+                    }
                     // Pedido.findByIdAndUpdate(pedidoId, { sincronizado: true }).then((res) => { });
                     // pusher.trigger('crm', 'remito', { pedido: pedidoId });
                 } else {
