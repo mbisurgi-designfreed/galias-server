@@ -12,7 +12,7 @@ mongoose.Promise = Promise;
 require('./config/passport/passport');
 
 app.use(cors());
-app.use(parser.json());
+app.use(parser.json({ limit: '50mb' }));
 app.use(parser.urlencoded({ extended: false }));
 
 require('./routes/auth.route')(app);
@@ -30,6 +30,7 @@ require('./routes/remito.route')(app);
 require('./routes/entrega.route')(app);
 require('./routes/talonario.route')(app);
 require('./routes/location.route')(app);
+require('./routes/files.route')(app);
 
 require('./jobs/sync')();
 
