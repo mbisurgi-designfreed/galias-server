@@ -24,6 +24,7 @@ require('./routes/grupo.route')(app);
 require('./routes/subgrupo.route')(app);
 require('./routes/cliente.route')(app);
 require('./routes/articulo.route')(app);
+require('./routes/articuloCompetencia.route')(app);
 require('./routes/info.route')(app);
 require('./routes/pedido.route')(app);
 require('./routes/remito.route')(app);
