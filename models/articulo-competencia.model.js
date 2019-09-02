@@ -13,9 +13,21 @@ const ArticuloCompetenciaSchema = new Schema({
         required: true
     },
     proveedor: {
-        type: String,
-        required: true
-    }
+        type: Schema.Types.ObjectId,
+        ref: 'proveedor'
+    },
+    familia: {
+        type: Schema.Types.ObjectId,
+        ref: 'familia'
+    },
+    grupo: {
+        type: Schema.Types.ObjectId,
+        ref: 'grupo'
+    },
+    subgrupo: {
+        type: Schema.Types.ObjectId,
+        ref: 'subgrupo'
+    },
 });
 
 ArticuloCompetenciaSchema.pre('save', async function (next) {

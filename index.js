@@ -25,6 +25,7 @@ require('./routes/subgrupo.route')(app);
 require('./routes/cliente.route')(app);
 require('./routes/articulo.route')(app);
 require('./routes/articuloCompetencia.route')(app);
+require('./routes/proveedor.route')(app);
 require('./routes/info.route')(app);
 require('./routes/pedido.route')(app);
 require('./routes/remito.route')(app);
@@ -32,7 +33,6 @@ require('./routes/entrega.route')(app);
 require('./routes/talonario.route')(app);
 require('./routes/location.route')(app);
 require('./routes/files.route')(app);
-
 require('./jobs/sync')();
 
 app.use((err, req, res, next) => {
