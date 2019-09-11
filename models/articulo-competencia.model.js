@@ -12,10 +12,6 @@ const ArticuloCompetenciaSchema = new Schema({
         type: String,
         required: true
     },
-    proveedor: {
-        type: Schema.Types.ObjectId,
-        ref: 'proveedor'
-    },
     familia: {
         type: Schema.Types.ObjectId,
         ref: 'familia'

@@ -44,6 +44,10 @@ const CompetenciaSchema = new Schema({
         type: Number,
         required: true
     },
+    proveedor: {
+        type: Schema.Types.ObjectId,
+        ref: 'proveedor'
+    },
     observaciones: {
         type: String
     }
