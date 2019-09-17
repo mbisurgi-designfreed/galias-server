@@ -20,7 +20,15 @@ exports.list = async (req, res, next) => {
 
 exports.listExcel = async (req, res, next) => {
     try {
-        const competencias = await Competencia.find();
+        const competencias = await Competencia.find()
+            .populate('cliente', 'id codigo razonSocial')
+            .populate('familia')
+            .populate('grupo')
+            .populate('subgrupo')
+            .populate('articulo', 'id codigo descripcion')
+            .populate('articuloCompetencia', 'id codigo descripcion')
+            .populate('proveedor')
+
         res.status(201).send(competencias);
     } catch (err) {
         console.log(err);
