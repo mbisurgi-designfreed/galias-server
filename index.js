@@ -34,6 +34,8 @@ require('./routes/entrega.route')(app);
 require('./routes/talonario.route')(app);
 require('./routes/location.route')(app);
 require('./routes/files.route')(app);
+require('./routes/zona.route')(app);
+require('./routes/vendedor.route')(app);
 require('./jobs/sync')();
 
 app.use((err, req, res, next) => {
