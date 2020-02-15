@@ -1,4 +1,5 @@
 const express = require('express');
+const logger = require('morgan');
 const mongoose = require('mongoose');
 const parser = require('body-parser');
 const cors = require('cors');
@@ -11,9 +12,10 @@ mongoose.Promise = Promise;
 
 require('./config/passport/passport');
 
-app.use(cors());
+app.use(logger('dev'));
 app.use(parser.json({ limit: '50mb' }));
 app.use(parser.urlencoded({ extended: false }));
+app.use(cors());
 
 require('./routes/auth.route')(app);
 require('./routes/unidad.route')(app);

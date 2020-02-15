@@ -2,12 +2,12 @@ const LocalStrategy = require('passport-local').Strategy;
 const User = require('../../../models/user.model');
 
 const options = {
-    usernameField: 'email'
+    usernameField: 'username'
 }
 
-module.exports = new LocalStrategy(options, async (email, password, done) => {
+module.exports = new LocalStrategy(options, async (username, password, done) => {
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email: username });
 
         if (!user) {
             done(null, false);
@@ -21,6 +21,7 @@ module.exports = new LocalStrategy(options, async (email, password, done) => {
             });
         }
     } catch (err) {
+        console.log('err', err);
         done(err);
     }
 });

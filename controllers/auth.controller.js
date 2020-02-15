@@ -21,7 +21,10 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.signin = (req, res, next) => {
-    const { user } = req;
-
-    res.send({ token: user.generateJwt() });
+    try {
+        const { user } = req;
+        res.json({ status: 'success', token: user.generateJwt() });
+    } catch (err) {
+        console.log('err', err);
+    }
 };

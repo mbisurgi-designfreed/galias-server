@@ -5,9 +5,9 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 module.exports = (app) => {
     const InfoController = require('../controllers/info.controller');
 
-    app.get('/api/info/fecha', jwtAuth, InfoController.list);
+    app.get('/api/info/fecha', InfoController.list);
 
-    app.get('/api/info/last', jwtAuth, InfoController.listLast);
+    app.get('/api/info/last', InfoController.listLast);
 
-    app.post('/api/info', jwtAuth, InfoController.insert);
+    app.post('/api/info', InfoController.insert);
 };
