@@ -64,6 +64,7 @@ exports.getClientes = async (req, res, next) => {
 exports.listExcel = async (req, res, next) => {
     try {
         const clientes = await Cliente.find()
+            .populate('zona')
             .populate('canal')
             .populate('subcanal');
 
