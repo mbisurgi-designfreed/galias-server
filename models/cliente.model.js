@@ -117,9 +117,9 @@ const ClienteSchema = new Schema({
     condicionPago: {
         type: Number,
     },
-    vendedor: {
+    zona: {
         type: Schema.Types.ObjectId,
-        ref: 'vendedor'
+        ref: 'zona'
     },
     diaVisita: {
         type: [String],
@@ -137,6 +137,10 @@ const ClienteSchema = new Schema({
     sincronizado: {
         type: Boolean,
         default: false
+    },
+    habilitado: {
+        type: Boolean,
+        default: true
     }
 });
 
@@ -145,7 +149,7 @@ ClienteSchema.pre('save', async function (next) {
     const cliente = this;
 
     const codigo = await model.findOne({}, '-_id codigo').sort({ codigo: -1 }).limit(1);
- 
+
     let nextCodigo = codigo.codigo;
 
     if (nextCodigo) {

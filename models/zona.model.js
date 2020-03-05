@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ZonaSchema = new Schema({
-    descripcion: {
+    nombre: {
         type: String,
         required: true
     },
@@ -14,10 +14,6 @@ const ZonaSchema = new Schema({
     color: {
         type: String,
         required: true
-    },
-    vendedor: {
-        type: Schema.Types.ObjectId,
-        ref: 'vendedor'
     }
 });
 
