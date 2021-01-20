@@ -33,7 +33,7 @@
     "passport-jwt": "^3.0.1",
     "passport-local": "^1.0.0",
     "pusher": "^1.5.1",
-    "socket.io": "^1.7.2",
+    "socket.io": "^2.4.0",
     "twilio": "^3.9.3"
   },
   "devDependencies": {
